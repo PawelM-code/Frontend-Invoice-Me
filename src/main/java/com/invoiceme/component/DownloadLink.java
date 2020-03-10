@@ -1,4 +1,4 @@
-package com.invoiceme.views;
+package com.invoiceme.component;
 
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.server.StreamResource;

@@ -33,7 +33,7 @@ public class MainLayout extends AppLayout {
 
         addToNavbar(img);
 
-        final Tabs tabs = new Tabs(home(), invoiceCreator(), invoices(), product(), currencies(), mycompany(), logout());
+        final Tabs tabs = new Tabs(home(), invoiceCreator(), invoices(), product(), currencies(), taxpayer(), mycompany(), logout());
         tabs.setOrientation(Tabs.Orientation.HORIZONTAL);
         tabs.addSelectedChangeListener(event -> {
             final Tab selectedTab = event.getSelectedTab();
@@ -50,6 +50,8 @@ public class MainLayout extends AppLayout {
                 getUI().ifPresent(ui -> ui.navigate(""));
             } else if (component instanceof MyCompanyView) {
                 getUI().ifPresent(ui -> ui.navigate("mycompany"));
+            } else if (component instanceof TaxpayerView) {
+                getUI().ifPresent(ui -> ui.navigate("buyer"));
             } else if (component instanceof LogoutView) {
                 UI.getCurrent().getPage().setLocation("http://localhost:8080/logout");
             }
@@ -109,6 +111,14 @@ public class MainLayout extends AppLayout {
         final Icon icon = USER_CARD.create();
         final Tab tab = new Tab(getVerticalMenuBarLayout(label, icon));
         tab2Workspace.put(tab, new MyCompanyView());
+        return tab;
+    }
+
+    private Tab taxpayer() {
+        final Label label = new Label("Buyers");
+        final Icon icon = DATABASE.create();
+        final Tab tab = new Tab(getVerticalMenuBarLayout(label, icon));
+        tab2Workspace.put(tab, new TaxpayerView());
         return tab;
     }
 

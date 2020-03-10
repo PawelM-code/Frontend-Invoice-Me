@@ -1,5 +1,6 @@
 package com.invoiceme.views;
 
+import com.invoiceme.component.DownloadLink;
 import com.invoiceme.domain.InvoiceDto;
 import com.invoiceme.domain.ItemDto;
 import com.invoiceme.domain.OwnerDto;
@@ -82,12 +83,20 @@ public class InvoiceListView extends VerticalLayout {
             details.addThemeNames("no-row-borders", "row-stripes", "no-headers");
             if (!itemsByInvoiceId.isEmpty()) {
                 details.setItems(itemsByInvoiceId);
-                details.addColumn(itemDto -> itemDto.getProductDto().getDescription()).setHeader("Description");
-                details.addColumn(ItemDto::getNetPrice).setHeader("Net price PLN");
-                details.addColumn(ItemDto::getVat).setHeader("VAT PLN");
-                details.addColumn(ItemDto::getGrossPrice).setHeader("Gross price PLN");
-                details.addColumn(ItemDto::getQuantity).setHeader("Quantity");
-                details.addColumn(ItemDto::getValue).setHeader("Total PLN");
+                details.addColumn(itemDto -> itemDto
+                        .getProductDto()
+                        .getDescription())
+                        .setHeader("Description");
+                details.addColumn(ItemDto::getNetPrice)
+                        .setHeader("Net price PLN");
+                details.addColumn(ItemDto::getVat)
+                        .setHeader("VAT PLN");
+                details.addColumn(ItemDto::getGrossPrice)
+                        .setHeader("Gross price PLN");
+                details.addColumn(ItemDto::getQuantity)
+                        .setHeader("Quantity");
+                details.addColumn(ItemDto::getValue)
+                        .setHeader("Total PLN");
                 details.setHeightByRows(true);
                 verticalLayoutInvoiceDetails.setSizeFull();
                 verticalLayoutInvoiceDetails.add(details);
@@ -97,16 +106,38 @@ public class InvoiceListView extends VerticalLayout {
     }
 
     private void addGridColumns() {
-        grid.addColumn(InvoiceDto::getId).setHeader("ID").setSortable(true);
-        grid.addColumn(InvoiceDto::getNumber).setHeader("Number").setSortable(true);
-        grid.addColumn(InvoiceDto::getIssueDate).setHeader("Date of issue").setSortable(true);
-        grid.addColumn(InvoiceDto::getDateOfPayment).setHeader("Date of payment").setSortable(true);
-        grid.addColumn(invoiceDto -> invoiceDto.getTaxpayerDto().getName()).setHeader("Buyer").setSortable(true);
-        grid.addColumn(InvoiceDto::getNetTotal).setHeader("Net PLN").setSortable(true);
-        grid.addColumn(InvoiceDto::getVatTotal).setHeader("VAT PLN").setSortable(true);
-        grid.addColumn(InvoiceDto::getGrossTotal).setHeader("Gross PLN").setSortable(true);
-        grid.addColumn(InvoiceDto::getCurrencyGrossTotal).setHeader("Currency gross total").setSortable(true);
-        grid.addColumn(InvoiceDto::getInvoiceCurrency).setHeader("Currency").setSortable(true);
+        grid.addColumn(InvoiceDto::getId)
+                .setHeader("ID")
+                .setSortable(true);
+        grid.addColumn(InvoiceDto::getNumber)
+                .setHeader("Number")
+                .setSortable(true);
+        grid.addColumn(InvoiceDto::getIssueDate)
+                .setHeader("Date of issue")
+                .setSortable(true);
+        grid.addColumn(InvoiceDto::getDateOfPayment)
+                .setHeader("Date of payment")
+                .setSortable(true);
+        grid.addColumn(invoiceDto -> invoiceDto
+                .getTaxpayerDto()
+                .getName())
+                .setHeader("Buyer")
+                .setSortable(true);
+        grid.addColumn(InvoiceDto::getNetTotal)
+                .setHeader("Net PLN")
+                .setSortable(true);
+        grid.addColumn(InvoiceDto::getVatTotal)
+                .setHeader("VAT PLN")
+                .setSortable(true);
+        grid.addColumn(InvoiceDto::getGrossTotal)
+                .setHeader("Gross PLN")
+                .setSortable(true);
+        grid.addColumn(InvoiceDto::getCurrencyGrossTotal)
+                .setHeader("Currency gross total")
+                .setSortable(true);
+        grid.addColumn(InvoiceDto::getInvoiceCurrency)
+                .setHeader("Currency")
+                .setSortable(true);
         grid.addComponentColumn(invoiceDto -> new Button("Delete", click -> {
             invoiceService.deleteInvoice(invoiceDto.getId());
             refreshGridItems(grid);
@@ -124,7 +155,7 @@ public class InvoiceListView extends VerticalLayout {
                     file.addClickListener(event -> {
                         File in = null;
                         try {
-                            in = File.createTempFile("invoice",".pdf");
+                            in = File.createTempFile("invoice", ".pdf");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

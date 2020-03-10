@@ -142,7 +142,7 @@ public class InvoiceView extends VerticalLayout {
     private void getAddItemButton() {
         addItem.setMaxWidth("10em");
         addItem.addClickListener(event -> {
-            vLInvoiceCreator.addComponentAtIndex(vLInvoiceCreator.getComponentCount() - 2, new ItemLayout());
+            vLInvoiceCreator.addComponentAtIndex(vLInvoiceCreator.getComponentCount() - 1, new ItemLayout());
         });
     }
 
