@@ -3,11 +3,10 @@ package com.invoiceme.views;
 import com.invoiceme.component.DownloadLink;
 import com.invoiceme.domain.InvoiceDto;
 import com.invoiceme.domain.ItemDto;
-import com.invoiceme.domain.OwnerDto;
 import com.invoiceme.layout.MainLayout;
 import com.invoiceme.service.InvoiceService;
 import com.invoiceme.service.ItemService;
-import com.invoiceme.service.MyCompanyService;
+import com.invoiceme.service.OwnerService;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
@@ -33,7 +32,7 @@ import java.util.stream.Collectors;
 
 @Route(value = "invoices", layout = MainLayout.class)
 public class InvoiceListView extends VerticalLayout {
-    private MyCompanyService myCompanyService = new MyCompanyService();
+//    private OwnerService ownerService = new OwnerService();
     private InvoiceService invoiceService = new InvoiceService();
     private ItemService itemService = new ItemService();
     private Grid<InvoiceDto> grid = new Grid<>();
@@ -193,16 +192,21 @@ public class InvoiceListView extends VerticalLayout {
         stamper.getAcroFields().setField("currency", invoiceDto.getCurrencyGrossTotal().toString() + " " + invoiceDto.getInvoiceCurrency());
         stamper.getAcroFields().setField("payment", invoiceDto.getDateOfPayment());
 
-        List<OwnerDto> myCompanyData = myCompanyService.getOwners();
-        int companyDataNewestPossition = myCompanyData.size() - 1;
+//        List<OwnerDto> myCompanyData = ownerService.getOwners();
+//        int companyDataNewestPossition = myCompanyData.size() - 1;
 
-        if (myCompanyData.size() > 0) {
-            stamper.getAcroFields().setField("myname", myCompanyData.get(companyDataNewestPossition).getName());
-            stamper.getAcroFields().setField("myaddress", myCompanyData.get(companyDataNewestPossition).getWorkingAddress());
-            stamper.getAcroFields().setField("mynip", myCompanyData.get(companyDataNewestPossition).getNip().toString());
-            stamper.getAcroFields().setField("account", myCompanyData.get(companyDataNewestPossition).getBankAccount());
+//        if (myCompanyData.size() > 0) {
+//            stamper.getAcroFields().setField("myname", myCompanyData.get(companyDataNewestPossition).getName());
+//            stamper.getAcroFields().setField("myaddress", myCompanyData.get(companyDataNewestPossition).getWorkingAddress());
+//            stamper.getAcroFields().setField("mynip", myCompanyData.get(companyDataNewestPossition).getNip().toString());
+//            stamper.getAcroFields().setField("account", myCompanyData.get(companyDataNewestPossition).getBankAccount());
 
-        }
+        stamper.getAcroFields().setField("myname", invoiceDto.getOwnerDto().getName());
+        stamper.getAcroFields().setField("myaddress", invoiceDto.getOwnerDto().getWorkingAddress());
+        stamper.getAcroFields().setField("mynip", invoiceDto.getOwnerDto().getNip().toString());
+        stamper.getAcroFields().setField("account", invoiceDto.getOwnerDto().getBankAccount());
+
+//        }
 
         if (!itemsByInvoiceId.isEmpty()) {
             for (int i = 0; i < itemsByInvoiceId.size(); i++) {

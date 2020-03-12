@@ -8,7 +8,7 @@ import java.util.List;
 
 import static java.util.Optional.ofNullable;
 
-public class MyCompanyService {
+public class OwnerService {
     private static final String OWNER_ENDPOINT = "https://immense-hollows-30003.herokuapp.com/v1/owner/";
     private RestTemplate restTemplate = new RestTemplate();
 

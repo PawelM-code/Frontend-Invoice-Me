@@ -17,6 +17,7 @@ public class InvoiceDto {
     private Long id;
     private String number;
     private String issueDate;
+    private OwnerDto ownerDto;
     private TaxpayerDto taxpayerDto;
     private String comments;
     private BigDecimal netTotal;

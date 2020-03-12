@@ -8,6 +8,7 @@ import com.invoiceme.layout.ItemLayout;
 import com.invoiceme.layout.MainLayout;
 import com.invoiceme.service.InvoiceService;
 import com.invoiceme.service.ItemService;
+import com.invoiceme.service.OwnerService;
 import com.invoiceme.service.TaxpayerService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 @Route(value = "invoice", layout = MainLayout.class)
 public class InvoiceView extends VerticalLayout {
     private InvoiceService invoiceService = new InvoiceService();
+    private OwnerService ownerService = new OwnerService();
     private TaxpayerService taxpayerService = new TaxpayerService();
     private ItemService itemService = new ItemService();
     private InvoiceDto invoiceDto = new InvoiceDto();
@@ -73,7 +75,6 @@ public class InvoiceView extends VerticalLayout {
         setSizeFull();
     }
 
-
     private void getSaveInvoiceButton() {
         saveInvoice.addClickListener(event -> {
             if (isValid(componentsToValidate)) {
@@ -85,6 +86,7 @@ public class InvoiceView extends VerticalLayout {
                 invoiceDto.setIssueDate(findBuyerLayout.getIssueDate().getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                 invoiceDto.setDateOfPayment(findBuyerLayout.getPaymentDate().getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                 invoiceDto.setInvoiceCurrency(currencySelect.getValue());
+                invoiceDto.setOwnerDto(ownerService.getOwner((long) ownerService.getOwners().size()));
                 invoiceDto.setTaxpayerDto(findBuyerLayout.getTaxpayerDto());
                 invoiceDto.setComments(comment.getValue());
                 invoiceService.createInvoice(invoiceDto);

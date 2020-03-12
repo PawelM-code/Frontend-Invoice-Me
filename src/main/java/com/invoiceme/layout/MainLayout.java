@@ -48,7 +48,7 @@ public class MainLayout extends AppLayout {
                 getUI().ifPresent(ui -> ui.navigate("currency"));
             } else if (component instanceof MainView) {
                 getUI().ifPresent(ui -> ui.navigate(""));
-            } else if (component instanceof MyCompanyView) {
+            } else if (component instanceof OwnerView) {
                 getUI().ifPresent(ui -> ui.navigate("mycompany"));
             } else if (component instanceof TaxpayerView) {
                 getUI().ifPresent(ui -> ui.navigate("buyer"));
@@ -110,7 +110,7 @@ public class MainLayout extends AppLayout {
         final Label label = new Label("My Company");
         final Icon icon = USER_CARD.create();
         final Tab tab = new Tab(getVerticalMenuBarLayout(label, icon));
-        tab2Workspace.put(tab, new MyCompanyView());
+        tab2Workspace.put(tab, new OwnerView());
         return tab;
     }
 
