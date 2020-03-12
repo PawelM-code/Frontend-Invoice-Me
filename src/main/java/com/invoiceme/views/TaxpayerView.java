@@ -23,18 +23,23 @@ public class TaxpayerView extends VerticalLayout {
     private void addTaxpayerGridColumns() {
         taxpayerGrid.addColumn(TaxpayerDto::getId)
                 .setHeader("ID")
-                .setSortable(true);
+                .setSortable(true)
+                .setFlexGrow(0);
         taxpayerGrid.addColumn(TaxpayerDto::getName)
                 .setHeader("Name")
-                .setSortable(true);
+                .setSortable(true)
+                .setFlexGrow(1);
         taxpayerGrid.addColumn(TaxpayerDto::getWorkingAddress)
                 .setHeader("Address")
-                .setSortable(true);
+                .setSortable(true)
+                .setFlexGrow(3);
         taxpayerGrid.addColumn(TaxpayerDto::getNip)
                 .setHeader("Nip")
-                .setSortable(true);
+                .setSortable(true)
+                .setFlexGrow(1);
         taxpayerGrid.addColumn(TaxpayerDto::getRegon)
                 .setHeader("Regon")
-                .setSortable(true);
+                .setSortable(true)
+                .setFlexGrow(1);
     }
 }

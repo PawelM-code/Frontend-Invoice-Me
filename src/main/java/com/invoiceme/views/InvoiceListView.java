@@ -6,13 +6,14 @@ import com.invoiceme.domain.ItemDto;
 import com.invoiceme.layout.MainLayout;
 import com.invoiceme.service.InvoiceService;
 import com.invoiceme.service.ItemService;
-import com.invoiceme.service.OwnerService;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfStamper;
+import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
 
 @Route(value = "invoices", layout = MainLayout.class)
 public class InvoiceListView extends VerticalLayout {
-//    private OwnerService ownerService = new OwnerService();
+    //    private OwnerService ownerService = new OwnerService();
     private InvoiceService invoiceService = new InvoiceService();
     private ItemService itemService = new ItemService();
     private Grid<InvoiceDto> grid = new Grid<>();
@@ -137,9 +138,32 @@ public class InvoiceListView extends VerticalLayout {
         grid.addColumn(InvoiceDto::getInvoiceCurrency)
                 .setHeader("Currency")
                 .setSortable(true);
+        Dialog dialog = new Dialog();
+        dialog.setCloseOnEsc(false);
+        dialog.setCloseOnOutsideClick(false);
+
+        Html header = new Html("<p><b>Delete invoice</b></p>");
+        Html text = new Html("<p>Do you want to <b>delete</b> invoice ?</p>");
+
+        Button yesButton = new Button("Yes", VaadinIcon.TRASH.create());
+        Button cancelButton = new Button("No");
+        dialog.add(header, text, yesButton, cancelButton);
+
         grid.addComponentColumn(invoiceDto -> new Button("Delete", click -> {
-            invoiceService.deleteInvoice(invoiceDto.getId());
-            refreshGridItems(grid);
+
+            yesButton.addClickListener(e -> {
+                invoiceService.deleteInvoice(invoiceDto.getId());
+                refreshGridItems(grid);
+                dialog.close();
+            });
+            yesButton.getElement().setAttribute("theme", "error tertiary");
+
+            cancelButton.addClickListener(clickEvent -> dialog.close());
+
+            dialog.open();
+
+//            invoiceService.deleteInvoice(invoiceDto.getId());
+//            refreshGridItems(grid);
         }));
 //        grid.addComponentColumn(invoiceDto -> new Button("Edit", click -> {
 //            getUI().ifPresent(ui -> ui.navigate("invoice"));

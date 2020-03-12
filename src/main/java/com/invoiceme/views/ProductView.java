@@ -54,7 +54,8 @@ public class ProductView extends VerticalLayout {
     private void getProductsGrid() {
         grid.setSizeFull();
         grid.addColumn(ProductDto::getId)
-                .setHeader("ID");
+                .setHeader("ID")
+                .setFlexGrow(0);
         Grid.Column<ProductDto> descriptionColumn = grid
                 .addColumn(ProductDto::getDescription)
                 .setHeader("Description");

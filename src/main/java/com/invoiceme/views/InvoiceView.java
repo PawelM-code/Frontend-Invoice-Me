@@ -11,6 +11,7 @@ import com.invoiceme.service.ItemService;
 import com.invoiceme.service.OwnerService;
 import com.invoiceme.service.TaxpayerService;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -105,10 +106,18 @@ public class InvoiceView extends VerticalLayout {
                         itemService.createItem(itemDto);
                     }
                 });
-
                 invoiceService.updateInvoice(invoiceDto);
-                UI.getCurrent().getPage().reload();
-//                invoiceNumber.clear();
+
+                Dialog dialog2 = new Dialog();
+                dialog2.setCloseOnEsc(false);
+                dialog2.setCloseOnOutsideClick(false);
+
+                Html header = new Html("<p><b>Confirm invoice save</b></p>");
+
+                dialog2.add(header);
+                dialog2.open();
+
+                UI.getCurrent().getPage().setLocation("http://localhost:8080/invoice");
             } else {
                 dialog.open();
             }

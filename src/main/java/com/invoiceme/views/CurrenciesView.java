@@ -88,7 +88,8 @@ public class CurrenciesView extends VerticalLayout {
     private void getCurrencyGrid() {
         currencyGrid.addColumn(CurrencyDto::getId)
                 .setHeader("ID")
-                .setSortable(true);
+                .setSortable(true)
+                .setFlexGrow(0);
         currencyGrid.addColumn(currencyDto -> Arrays
                 .stream(currencyDto.getRates())
                 .iterator().next().getEffectiveDate())
