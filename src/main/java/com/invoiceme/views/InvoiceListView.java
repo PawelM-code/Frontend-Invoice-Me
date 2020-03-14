@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 
 @Route(value = "invoices", layout = MainLayout.class)
 public class InvoiceListView extends VerticalLayout {
-    //    private OwnerService ownerService = new OwnerService();
     private InvoiceService invoiceService = new InvoiceService();
     private ItemService itemService = new ItemService();
     private Grid<InvoiceDto> grid = new Grid<>();
@@ -68,6 +67,7 @@ public class InvoiceListView extends VerticalLayout {
     }
 
     private void setGridSettings() {
+        grid.getStyle().set("white-space", "normal");
         grid.setHeightFull();
         grid.setSelectionMode(Grid.SelectionMode.NONE);
         grid.setDetailsVisibleOnClick(false);
@@ -215,22 +215,10 @@ public class InvoiceListView extends VerticalLayout {
         stamper.getAcroFields().setField("gross", invoiceDto.getGrossTotal().toString() + " PLN");
         stamper.getAcroFields().setField("currency", invoiceDto.getCurrencyGrossTotal().toString() + " " + invoiceDto.getInvoiceCurrency());
         stamper.getAcroFields().setField("payment", invoiceDto.getDateOfPayment());
-
-//        List<OwnerDto> myCompanyData = ownerService.getOwners();
-//        int companyDataNewestPossition = myCompanyData.size() - 1;
-
-//        if (myCompanyData.size() > 0) {
-//            stamper.getAcroFields().setField("myname", myCompanyData.get(companyDataNewestPossition).getName());
-//            stamper.getAcroFields().setField("myaddress", myCompanyData.get(companyDataNewestPossition).getWorkingAddress());
-//            stamper.getAcroFields().setField("mynip", myCompanyData.get(companyDataNewestPossition).getNip().toString());
-//            stamper.getAcroFields().setField("account", myCompanyData.get(companyDataNewestPossition).getBankAccount());
-
         stamper.getAcroFields().setField("myname", invoiceDto.getOwnerDto().getName());
         stamper.getAcroFields().setField("myaddress", invoiceDto.getOwnerDto().getWorkingAddress());
         stamper.getAcroFields().setField("mynip", invoiceDto.getOwnerDto().getNip().toString());
         stamper.getAcroFields().setField("account", invoiceDto.getOwnerDto().getBankAccount());
-
-//        }
 
         if (!itemsByInvoiceId.isEmpty()) {
             for (int i = 0; i < itemsByInvoiceId.size(); i++) {

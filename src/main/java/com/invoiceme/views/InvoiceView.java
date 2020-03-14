@@ -17,7 +17,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.IntegerField;
@@ -30,6 +29,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.invoiceme.domain.InvoiceCurrency.PLN;
+import static com.invoiceme.domain.InvoiceCurrency.values;
 
 @Route(value = "invoice", layout = MainLayout.class)
 public class InvoiceView extends VerticalLayout {
@@ -58,7 +60,6 @@ public class InvoiceView extends VerticalLayout {
     public InvoiceView() {
         invoiceNumber.setRequired(true);
         getCurrency();
-        getDialog();
         getAddItemButton();
         getRemoveItemButton();
         getFormLayoutInvoiceNumber();
@@ -66,14 +67,16 @@ public class InvoiceView extends VerticalLayout {
         getFormLayoutAddOrRemoveItem();
         getVerticalLayoutInvoiceCreator();
         fLSave.add(saveInvoice);
-        fLSave.getStyle().set("margin", "7px 25px 7px 25px");
-        itemLayout.getStyle().set("margin", "7px 25px 7px 25px");
+        fLSave.setSizeFull();
+        fLSave.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("25em", 1),
+                new FormLayout.ResponsiveStep("32em", 2),
+                new FormLayout.ResponsiveStep("40em", 3));
         itemLayout.setSizeFull();
         addComponentsToValidateList();
         getSaveInvoiceButton();
 
-        add(vLInvoiceCreator, dialog);
-        setSizeFull();
+        add(vLInvoiceCreator);
     }
 
     private void getSaveInvoiceButton() {
@@ -108,21 +111,26 @@ public class InvoiceView extends VerticalLayout {
                 });
                 invoiceService.updateInvoice(invoiceDto);
 
-                Dialog dialog2 = new Dialog();
-                dialog2.setCloseOnEsc(false);
-                dialog2.setCloseOnOutsideClick(false);
-
-                Html header = new Html("<p><b>Confirm invoice save</b></p>");
-
-                dialog2.add(header);
-                dialog2.open();
+                setDialog("<p><b>Confirm invoice save!</b></p>");
 
                 UI.getCurrent().getPage().setLocation("http://localhost:8080/invoice");
             } else {
-                dialog.open();
+                setDialog("<p><b>Please complete required fields.</b></p>");
             }
 
         });
+    }
+
+    private void setDialog(String html) {
+        dialog.setCloseOnEsc(false);
+        dialog.setCloseOnOutsideClick(false);
+        Button cancelButton = new Button("Cancel");
+        cancelButton.addClickListener(clickEvent -> dialog.close());
+
+        Html header = new Html(html);
+
+        dialog.add(header, cancelButton);
+        dialog.open();
     }
 
     private void addComponentsToValidateList() {
@@ -140,7 +148,6 @@ public class InvoiceView extends VerticalLayout {
     }
 
     private void getRemoveItemButton() {
-        removeItem.setMaxWidth("10em");
         removeItem.addClickListener(event -> {
             List<Component> componentList = vLInvoiceCreator.getChildren().collect(Collectors.toList());
             List<Component> itemLayoutList = componentList.stream().filter(component -> component instanceof ItemLayout).collect(Collectors.toList());
@@ -151,21 +158,15 @@ public class InvoiceView extends VerticalLayout {
     }
 
     private void getAddItemButton() {
-        addItem.setMaxWidth("10em");
         addItem.addClickListener(event -> {
             vLInvoiceCreator.addComponentAtIndex(vLInvoiceCreator.getComponentCount() - 1, new ItemLayout());
         });
     }
 
-    private void getDialog() {
-        dialog.add(new Label("Uzupełnij wymagane pola"));
-        dialog.setWidth("300px");
-        dialog.setHeight("150px");
-    }
-
     private void getCurrency() {
         currencySelect.setRequiredIndicatorVisible(true);
-        currencySelect.setItems(InvoiceCurrency.values());
+        currencySelect.setItems(values());
+        currencySelect.setValue(PLN);
         currencySelect.setLabel("Currency");
     }
 
@@ -182,28 +183,34 @@ public class InvoiceView extends VerticalLayout {
     }
 
     private void getFormLayoutAddOrRemoveItem() {
-        fLAddOrRemoveItem.getStyle().set("margin", "7px 25px 7px 25px");
+        fLAddOrRemoveItem.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("25em", 1),
+                new FormLayout.ResponsiveStep("32em", 2),
+                new FormLayout.ResponsiveStep("40em", 3));
+        fLAddOrRemoveItem.setSizeFull();
         fLAddOrRemoveItem.add(addItem, removeItem);
     }
 
     private void getFormLayoutBottomSection() {
-        fLBottomSection.setMaxWidth("55em");
         fLBottomSection.setSizeFull();
         fLBottomSection.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("55em", 1),
-                new FormLayout.ResponsiveStep("55em", 2),
-                new FormLayout.ResponsiveStep("55em", 3));
-        fLBottomSection.getStyle().set("margin", "7px 25px 7px 25px");
+                new FormLayout.ResponsiveStep("25em", 1),
+                new FormLayout.ResponsiveStep("32em", 2),
+                new FormLayout.ResponsiveStep("40em", 3));
+//        fLBottomSection.getStyle().set("margin", "7px 25px 7px 25px");
         fLBottomSection.add(
                 currencySelect,
                 comment);
     }
 
     private void getFormLayoutInvoiceNumber() {
-        fLInvoiceNumber.setMaxWidth("55em");
-        fLInvoiceNumber.getStyle().set("margin", "7px 25px 7px 25px");
+//        fLInvoiceNumber.getStyle().set("margin", "7px 25px 7px 25px");
         fLInvoiceNumber.setSizeFull();
-        fLInvoiceNumber.add(invoiceNumber);
+        fLInvoiceNumber.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("25em", 1),
+                new FormLayout.ResponsiveStep("32em", 2),
+                new FormLayout.ResponsiveStep("40em", 3));
+        fLInvoiceNumber.add(invoiceNumber, 1);
     }
 
     private boolean isValid(List<Component> componentsToValidate) {

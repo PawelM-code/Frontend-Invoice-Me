@@ -5,19 +5,40 @@ import com.invoiceme.layout.MainLayout;
 import com.invoiceme.service.TaxpayerService;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Route;
 
 @Route(value = "buyer", layout = MainLayout.class)
 public class TaxpayerView extends VerticalLayout {
+    private TaxpayerService taxpayerService = new TaxpayerService();
     private Grid<TaxpayerDto> taxpayerGrid = new Grid<>();
+    private TextField filter = new TextField();
 
-    public TaxpayerView(){
+    public TaxpayerView() {
+        setFilter();
         taxpayerGrid.setSizeFull();
-        TaxpayerService taxpayerService = new TaxpayerService();
         taxpayerGrid.setItems(taxpayerService.getTaxpayers());
         addTaxpayerGridColumns();
-        add(taxpayerGrid);
+        add(filter, taxpayerGrid);
         setSizeFull();
+    }
+
+    private void setFilter() {
+        filter.setMinWidth("20em");
+        filter.setPlaceholder("Filter by name, address, nip, regon");
+        filter.setClearButtonVisible(true);
+        filter.setValueChangeMode(ValueChangeMode.EAGER);
+        filter.addValueChangeListener(e -> updateListFilterByNameOrValue());
+    }
+
+    private void updateListFilterByNameOrValue() {
+        taxpayerGrid.setItems(taxpayerService.getTaxpayers()
+                .stream()
+                .filter(t -> t.getName().contains(filter.getValue()) ||
+                        t.getNip().toString().contains(filter.getValue()) ||
+                        t.getRegon().toString().contains(filter.getValue()) ||
+                        t.getWorkingAddress().contains(filter.getValue())));
     }
 
     private void addTaxpayerGridColumns() {

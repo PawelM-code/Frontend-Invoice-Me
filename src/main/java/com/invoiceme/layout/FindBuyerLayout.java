@@ -35,13 +35,12 @@ public class FindBuyerLayout extends FormLayout {
     }
 
     private void getFormLayoutCompleteBuyerData() {
-        fLCompleteBuyerData.setMaxWidth("55em");
         fLCompleteBuyerData.setSizeFull();
         fLCompleteBuyerData.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("55em", 1),
-                new FormLayout.ResponsiveStep("55em", 2),
-                new FormLayout.ResponsiveStep("55em", 3));
-        fLCompleteBuyerData.getStyle().set("margin", "7px 25px 7px 25px");
+                new FormLayout.ResponsiveStep("25em", 1),
+                new FormLayout.ResponsiveStep("32em", 2),
+                new FormLayout.ResponsiveStep("40em", 3));
+
         fLCompleteBuyerData.add(
                 buyerName,
                 regon,
@@ -49,24 +48,23 @@ public class FindBuyerLayout extends FormLayout {
     }
 
     private void getFormLayoutFindBuyer() {
-        fLFindBuyer.setMaxWidth("55em");
         fLFindBuyer.setSizeFull();
         fLFindBuyer.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("55em", 1),
-                new FormLayout.ResponsiveStep("55em", 2),
-                new FormLayout.ResponsiveStep("55em", 3));
-        fLFindBuyer.getStyle().set("margin", "7px 25px 7px 25px");
+                new FormLayout.ResponsiveStep("25em", 1),
+                new FormLayout.ResponsiveStep("25em", 2),
+                new FormLayout.ResponsiveStep("25em", 3));
         fLFindBuyer.add(
                 nip,
                 issueDate,
                 paymentDate,
                 findTaxpayer);
+        fLFindBuyer.setColspan(findTaxpayer, 1);
+
     }
 
     private void setFindTaxpayerButton() {
         findTaxpayer.setDisableOnClick(true);
 
-        findTaxpayer.setMaxWidth("20em");
         findTaxpayer.addClickListener(event ->
         {
             taxpayerDto = getTaxpayerDto(issueDate, nip);

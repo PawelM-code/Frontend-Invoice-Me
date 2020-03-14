@@ -18,6 +18,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Locale;
 
+import static com.invoiceme.domain.InvoiceCurrency.*;
+
 @Route(value = "currency", layout = MainLayout.class)
 public class CurrenciesView extends VerticalLayout {
     private CurrencyService currencyService = new CurrencyService();
@@ -46,6 +48,7 @@ public class CurrenciesView extends VerticalLayout {
 
     private void getRateLabel() {
         rate.setMaxWidth("5em");
+        rate.setTitle("Rate");
     }
 
     private void getFormLayoutCurrencyRateFields() {
@@ -81,7 +84,7 @@ public class CurrenciesView extends VerticalLayout {
     }
 
     private void getCurrency() {
-        selectCurrency.setItems(InvoiceCurrency.values());
+        selectCurrency.setItems(EUR, USD, CHF);
         selectCurrency.setLabel("Currency code");
     }
 

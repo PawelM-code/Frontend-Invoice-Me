@@ -23,12 +23,10 @@ public class ItemLayout extends FormLayout {
         quantity.setRequiredIndicatorVisible(true);
         initLayout();
         setResponsiveSteps(
-                new FormLayout.ResponsiveStep("45em", 1),
-                new FormLayout.ResponsiveStep("45em", 2),
-                new FormLayout.ResponsiveStep("45em", 3),
-                new FormLayout.ResponsiveStep("10em", 4));
+                new FormLayout.ResponsiveStep("25em", 1),
+                new FormLayout.ResponsiveStep("32em", 2),
+                new FormLayout.ResponsiveStep("40em", 3));
         setSizeFull();
-        getStyle().set("margin", "7px 25px 7px 25px");
     }
 
     private void initLayout() {
