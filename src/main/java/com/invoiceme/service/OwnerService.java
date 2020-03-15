@@ -6,10 +6,11 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.invoiceme.config.InvoiceMeAddress.BACKEND_URL;
 import static java.util.Optional.ofNullable;
 
 public class OwnerService {
-    private static final String OWNER_ENDPOINT = "https://immense-hollows-30003.herokuapp.com/v1/owner/";
+    private static final String OWNER_ENDPOINT = BACKEND_URL + "/owner/";
     private RestTemplate restTemplate = new RestTemplate();
 
     public OwnerDto getOwner(Long id) {

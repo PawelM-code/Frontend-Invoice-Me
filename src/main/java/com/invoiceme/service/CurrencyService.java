@@ -7,11 +7,12 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.invoiceme.config.InvoiceMeAddress.BACKEND_URL;
 import static java.util.Optional.ofNullable;
 
 @Service
 public class CurrencyService {
-    private static final String CURRENCY_ENDPOINT = "https://immense-hollows-30003.herokuapp.com/v1/currency";
+    private static final String CURRENCY_ENDPOINT = BACKEND_URL + "/currency";
     private RestTemplate restTemplate = new RestTemplate();
 
     public List<CurrencyDto> getCurrencies() {

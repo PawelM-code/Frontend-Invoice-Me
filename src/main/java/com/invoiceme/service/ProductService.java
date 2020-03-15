@@ -7,11 +7,12 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.invoiceme.config.InvoiceMeAddress.BACKEND_URL;
 import static java.util.Optional.ofNullable;
 
 @Service
 public class ProductService {
-    private static final String PRODUCTS_ENDPOINT = "https://immense-hollows-30003.herokuapp.com/v1/products";
+    private static final String PRODUCTS_ENDPOINT = BACKEND_URL + "/products";
     private RestTemplate restTemplate = new RestTemplate();
 
     public void createProduct(String description, int vat) {
