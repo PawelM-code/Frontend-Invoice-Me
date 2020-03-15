@@ -1,5 +1,5 @@
-# InvoiceMe App REST API
-Frontend InvoiceMe App.<br />
+# InvoiceMe App Vaadin
+Frontend InvoiceMe App (Vaadin).<br />
 App created to issue invoices.
 Additionally, it enables:
 * management of issued invoices
