@@ -1,5 +1,6 @@
 package com.invoiceme.views;
 
+import com.invoiceme.component.ValidateComponent;
 import com.invoiceme.domain.InvoiceCurrency;
 import com.invoiceme.domain.InvoiceDto;
 import com.invoiceme.domain.ItemDto;
@@ -14,13 +15,10 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
@@ -30,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.invoiceme.config.InvoiceMeAddress.APP_URL;
 import static com.invoiceme.domain.InvoiceCurrency.PLN;
 import static com.invoiceme.domain.InvoiceCurrency.values;
 
@@ -40,48 +39,110 @@ public class InvoiceView extends VerticalLayout {
     private TaxpayerService taxpayerService = new TaxpayerService();
     private ItemService itemService = new ItemService();
     private InvoiceDto invoiceDto = new InvoiceDto();
-    private FormLayout fLInvoiceNumber = new FormLayout();
-    private FormLayout fLAddOrRemoveItem = new FormLayout();
-    private FormLayout fLBottomSection = new FormLayout();
-    private FormLayout fLSave = new FormLayout();
-    private VerticalLayout vLInvoiceCreator = new VerticalLayout();
-    private ItemLayout itemLayout = new ItemLayout();
     private FindBuyerLayout findBuyerLayout = new FindBuyerLayout();
-    private TextField invoiceNumber = getInvoiceNumber();
-    private Select<InvoiceCurrency> currencySelect = new Select<>();
-    private TextField comment = new TextField("Comment");
-    private Button saveInvoice = new Button("Save invoice");
-    private Button addItem = new Button("Add item");
-    private Button removeItem = new Button("Remove item");
+    private ValidateComponent validateComponent = new ValidateComponent();
+    private FormLayout saveLayout;
+    private FormLayout invoiceNumberLayout;
+    private FormLayout addOrRemoveItemLayout;
+    private FormLayout currencyAndCommentLayout;
+    private Select<InvoiceCurrency> currencySelect;
+    private TextField invoiceNumber;
+    private TextField comment;
+    private Button addItem;
+    private Button removeItem;
+    private Button saveInvoice;
     private Dialog dialog = new Dialog();
-    private List<Component> componentsToValidate = new ArrayList<>();
-
+    private List<Component> componentsToValidate;
 
     public InvoiceView() {
-        invoiceNumber.setRequired(true);
+        getInvoiceNumber();
+        getInvoiceNumberLayout();
         getCurrency();
+        getComment();
+        getCurrencyAndCommentLayout();
         getAddItemButton();
         getRemoveItemButton();
-        getFormLayoutInvoiceNumber();
-        getFormLayoutBottomSection();
-        getFormLayoutAddOrRemoveItem();
-        getVerticalLayoutInvoiceCreator();
-        fLSave.add(saveInvoice);
-        fLSave.setSizeFull();
-        fLSave.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("25em", 1),
-                new FormLayout.ResponsiveStep("32em", 2),
-                new FormLayout.ResponsiveStep("40em", 3));
-        itemLayout.setSizeFull();
-        addComponentsToValidateList();
+        getAddOrRemoveItemLayout();
         getSaveInvoiceButton();
+        getSaveLayout();
 
-        add(vLInvoiceCreator);
+        setSizeFull();
+        add(invoiceNumberLayout,
+                findBuyerLayout.getFLFindBuyer(),
+                findBuyerLayout.getFLCompleteBuyerData(),
+                currencyAndCommentLayout,
+                addOrRemoveItemLayout,
+                new ItemLayout(),
+                saveLayout);
+    }
+
+    private void getInvoiceNumber() {
+        invoiceNumber = new TextField();
+        invoiceNumber.setLabel("Invoice number");
+        invoiceNumber.setRequired(true);
+    }
+
+    private void getInvoiceNumberLayout() {
+        invoiceNumberLayout = new FormLayout();
+        invoiceNumberLayout.add(invoiceNumber);
+        setFormLayoutInvoiceNumber();
+    }
+
+    private void setFormLayoutInvoiceNumber() {
+        invoiceNumberLayout.setMaxWidth("45em");
+        setFormLayoutResponsiveSteps(invoiceNumberLayout);
+        invoiceNumberLayout.add(invoiceNumber, 1);
+    }
+
+    private void getCurrency() {
+        currencySelect = new Select<>();
+        currencySelect.setRequiredIndicatorVisible(true);
+        currencySelect.setItems(values());
+        currencySelect.setValue(PLN);
+        currencySelect.setLabel("Currency");
+    }
+
+    private void getComment() {
+        comment = new TextField("Comment");
+    }
+
+    private void getCurrencyAndCommentLayout() {
+        currencyAndCommentLayout = new FormLayout();
+        setFormLayoutResponsiveSteps(currencyAndCommentLayout);
+        currencyAndCommentLayout.add(
+                currencySelect,
+                comment);
+    }
+
+    private void getAddItemButton() {
+        addItem = new Button("Add item");
+        addItem.addClickListener(event ->
+                addComponentAtIndex(getComponentCount() - 1, new ItemLayout()));
+    }
+
+    private void getRemoveItemButton() {
+        removeItem = new Button("Remove item");
+        removeItem.addClickListener(event -> {
+            List<Component> componentList = getChildren().collect(Collectors.toList());
+            List<Component> itemLayoutList = componentList.stream().filter(component -> component instanceof ItemLayout).collect(Collectors.toList());
+            if (itemLayoutList.size() > 1) {
+                remove(itemLayoutList.get(itemLayoutList.size() - 1));
+            }
+        });
+    }
+
+    private void getAddOrRemoveItemLayout() {
+        addOrRemoveItemLayout = new FormLayout();
+        setFormLayoutResponsiveSteps(addOrRemoveItemLayout);
+        addOrRemoveItemLayout.add(addItem, removeItem);
     }
 
     private void getSaveInvoiceButton() {
+        saveInvoice = new Button("Save invoice");
+
         saveInvoice.addClickListener(event -> {
-            if (isValid(componentsToValidate)) {
+            componentsToValidate = getComponentsList();
+            if (validateComponent.isComponentNotEmpty(componentsToValidate)) {
                 taxpayerService.saveTaxpayer(findBuyerLayout.getTaxpayerDto());
                 Long taxpayerId = taxpayerService.getTaxpayerId(Long.valueOf(findBuyerLayout.getNip().getValue()));
                 findBuyerLayout.getTaxpayerDto().setId(taxpayerId);
@@ -98,7 +159,7 @@ public class InvoiceView extends VerticalLayout {
                 Long invoiceId = invoiceService.getInvoiceId(invoiceDto.getNumber());
                 invoiceDto.setId(invoiceId);
 
-                vLInvoiceCreator.getChildren().forEach(component -> {
+                getChildren().forEach(component -> {
                     if (component instanceof ItemLayout) {
                         ItemDto itemDto = new ItemDto();
                         itemDto.setInvoiceDto(invoiceDto);
@@ -113,15 +174,15 @@ public class InvoiceView extends VerticalLayout {
 
                 setDialog("<p><b>Confirm invoice save!</b></p>");
 
-                UI.getCurrent().getPage().setLocation("http://localhost:8080/invoice");
+                UI.getCurrent().getPage().setLocation(APP_URL + "/invoice");
             } else {
                 setDialog("<p><b>Please complete required fields.</b></p>");
             }
-
         });
     }
 
     private void setDialog(String html) {
+        dialog.removeAll();
         dialog.setCloseOnEsc(false);
         dialog.setCloseOnOutsideClick(false);
         Button cancelButton = new Button("Cancel");
@@ -133,7 +194,8 @@ public class InvoiceView extends VerticalLayout {
         dialog.open();
     }
 
-    private void addComponentsToValidateList() {
+    private List<Component> getComponentsList() {
+        componentsToValidate = new ArrayList<>();
         componentsToValidate.add(invoiceNumber);
         componentsToValidate.add(findBuyerLayout.getIssueDate());
         componentsToValidate.add(findBuyerLayout.getPaymentDate());
@@ -142,116 +204,27 @@ public class InvoiceView extends VerticalLayout {
         componentsToValidate.add(findBuyerLayout.getRegon());
         componentsToValidate.add(findBuyerLayout.getBuyerWorkingAddress());
         componentsToValidate.add(currencySelect);
-        componentsToValidate.add(itemLayout.getSelectProducts());
-        componentsToValidate.add(itemLayout.getNetPrice());
-        componentsToValidate.add(itemLayout.getQuantity());
-    }
-
-    private void getRemoveItemButton() {
-        removeItem.addClickListener(event -> {
-            List<Component> componentList = vLInvoiceCreator.getChildren().collect(Collectors.toList());
-            List<Component> itemLayoutList = componentList.stream().filter(component -> component instanceof ItemLayout).collect(Collectors.toList());
-            if (itemLayoutList.size() > 1) {
-                vLInvoiceCreator.remove(itemLayoutList.get(itemLayoutList.size() - 1));
+        getChildren().forEach(component -> {
+            if (component instanceof ItemLayout) {
+                componentsToValidate.add(((ItemLayout) component).getSelectProducts());
+                componentsToValidate.add(((ItemLayout) component).getNetPrice());
+                componentsToValidate.add(((ItemLayout) component).getQuantity());
             }
         });
+        return componentsToValidate;
     }
 
-    private void getAddItemButton() {
-        addItem.addClickListener(event -> {
-            vLInvoiceCreator.addComponentAtIndex(vLInvoiceCreator.getComponentCount() - 1, new ItemLayout());
-        });
+    private void getSaveLayout() {
+        saveLayout = new FormLayout();
+        saveLayout.add(saveInvoice);
+        setFormLayoutResponsiveSteps(saveLayout);
     }
 
-    private void getCurrency() {
-        currencySelect.setRequiredIndicatorVisible(true);
-        currencySelect.setItems(values());
-        currencySelect.setValue(PLN);
-        currencySelect.setLabel("Currency");
-    }
-
-    private void getVerticalLayoutInvoiceCreator() {
-        vLInvoiceCreator.add(
-                fLInvoiceNumber,
-                findBuyerLayout.getFLFindBuyer(),
-                findBuyerLayout.getFLCompleteBuyerData(),
-                fLBottomSection,
-                fLAddOrRemoveItem,
-                itemLayout,
-                fLSave);
-        vLInvoiceCreator.setSizeFull();
-    }
-
-    private void getFormLayoutAddOrRemoveItem() {
-        fLAddOrRemoveItem.setResponsiveSteps(
+    private void setFormLayoutResponsiveSteps(FormLayout formLayout) {
+        formLayout.setSizeFull();
+        formLayout.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("25em", 1),
                 new FormLayout.ResponsiveStep("32em", 2),
                 new FormLayout.ResponsiveStep("40em", 3));
-        fLAddOrRemoveItem.setSizeFull();
-        fLAddOrRemoveItem.add(addItem, removeItem);
-    }
-
-    private void getFormLayoutBottomSection() {
-        fLBottomSection.setSizeFull();
-        fLBottomSection.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("25em", 1),
-                new FormLayout.ResponsiveStep("32em", 2),
-                new FormLayout.ResponsiveStep("40em", 3));
-//        fLBottomSection.getStyle().set("margin", "7px 25px 7px 25px");
-        fLBottomSection.add(
-                currencySelect,
-                comment);
-    }
-
-    private void getFormLayoutInvoiceNumber() {
-//        fLInvoiceNumber.getStyle().set("margin", "7px 25px 7px 25px");
-        fLInvoiceNumber.setSizeFull();
-        fLInvoiceNumber.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("25em", 1),
-                new FormLayout.ResponsiveStep("32em", 2),
-                new FormLayout.ResponsiveStep("40em", 3));
-        fLInvoiceNumber.add(invoiceNumber, 1);
-    }
-
-    private boolean isValid(List<Component> componentsToValidate) {
-        boolean isValid = true;
-
-        for (Component c : componentsToValidate) {
-            if (c instanceof TextField) {
-                if (((TextField) c).isEmpty()) {
-                    isValid = false;
-                    break;
-                }
-            } else if (c instanceof DatePicker) {
-                if (((DatePicker) c).isEmpty()) {
-                    isValid = false;
-                    break;
-                }
-            } else if (c instanceof Select) {
-                if (((Select) c).isEmpty()) {
-                    isValid = false;
-                    break;
-                }
-            } else if (c instanceof NumberField) {
-                if (((NumberField) c).isEmpty()) {
-                    isValid = false;
-                    break;
-                }
-            } else if (c instanceof IntegerField) {
-                if (((IntegerField) c).isEmpty()) {
-                    isValid = false;
-                    break;
-                }
-            }
-        }
-        return isValid;
-    }
-
-    private TextField getInvoiceNumber() {
-        FormLayout fLInvoiceNumber = new FormLayout();
-        TextField textFieldNumber = new TextField("Invoice number");
-        fLInvoiceNumber.add(textFieldNumber);
-        fLInvoiceNumber.setMaxWidth("45em");
-        return textFieldNumber;
     }
 }

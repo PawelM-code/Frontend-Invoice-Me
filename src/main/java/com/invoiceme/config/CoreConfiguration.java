@@ -43,8 +43,6 @@ public class CoreConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/product").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/user").hasRole("ADMIN")
                 .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
-//                .antMatchers(HttpMethod.POST, "/api").hasAnyRole("ADMIN")
-//                .antMatchers(HttpMethod.DELETE, "/api").hasRole("ADMIN")
                 .and()
                 .formLogin().permitAll()
                 .and()

@@ -1,5 +1,6 @@
 package com.invoiceme.views;
 
+import com.invoiceme.config.InvoiceMeAddress;
 import com.invoiceme.domain.OwnerDto;
 import com.invoiceme.layout.MainLayout;
 import com.invoiceme.service.OwnerService;
@@ -14,8 +15,11 @@ import com.vaadin.flow.router.Route;
 
 import java.util.List;
 
+import static com.invoiceme.config.InvoiceMeAddress.APP_URL;
+
 @Route(value = "mycompany", layout = MainLayout.class)
 public class OwnerView extends VerticalLayout {
+    private InvoiceMeAddress invoiceMeAddress = new InvoiceMeAddress();
     private OwnerService ownerService = new OwnerService();
     private TextField name = new TextField("Name");
     private TextField nip = new TextField("Nip");
@@ -36,11 +40,9 @@ public class OwnerView extends VerticalLayout {
 
     public OwnerView() {
         setOwnerDataLabels();
-        fLCompanyData = getFormLayoutCompanyData();
-        fLCompanyData.setVisible(false);
+        getFormLayoutCompanyData();
         addSaveCompanyDataButton();
-
-        addNewCompanyData = getAddNewCompanyData();
+        getAddNewCompanyData();
         VerticalLayout companyDataLayout = getCompanyDataLayout();
 
         add(companyDataLayout, fLCompanyData);
@@ -49,7 +51,7 @@ public class OwnerView extends VerticalLayout {
         setAlignItems(FlexComponent.Alignment.CENTER);
     }
 
-    private Button getAddNewCompanyData() {
+    private void getAddNewCompanyData() {
         addNewCompanyData = new Button("Add new company data");
         addNewCompanyData.addClickListener(clickEvent -> {
             if (!fLCompanyData.isVisible()) {
@@ -58,7 +60,6 @@ public class OwnerView extends VerticalLayout {
                 fLCompanyData.setVisible(false);
             }
         });
-        return addNewCompanyData;
     }
 
     private VerticalLayout getCompanyDataLayout() {
@@ -107,13 +108,14 @@ public class OwnerView extends VerticalLayout {
                         bankAccount.getValue(),
                         email.getValue());
                 ownerService.saveOwner(ownerDto);
-                UI.getCurrent().getPage().setLocation("http://localhost:8080/mycompany");
+                UI.getCurrent().getPage().setLocation(APP_URL + "/mycompany");
             });
         }
     }
 
-    private FormLayout getFormLayoutCompanyData() {
+    private void getFormLayoutCompanyData() {
         fLCompanyData = new FormLayout();
+        fLCompanyData.setVisible(false);
         fLCompanyData.setMaxWidth("120em");
         fLCompanyData.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("35em", 1),
@@ -129,6 +131,5 @@ public class OwnerView extends VerticalLayout {
                 workingAddress,
                 bankAccount,
                 email);
-        return fLCompanyData;
     }
 }

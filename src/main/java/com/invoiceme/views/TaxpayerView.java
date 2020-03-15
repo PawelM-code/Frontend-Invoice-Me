@@ -17,9 +17,9 @@ public class TaxpayerView extends VerticalLayout {
 
     public TaxpayerView() {
         setFilter();
-        taxpayerGrid.setSizeFull();
-        taxpayerGrid.setItems(taxpayerService.getTaxpayers());
+        setTaxpayerGrid();
         addTaxpayerGridColumns();
+
         add(filter, taxpayerGrid);
         setSizeFull();
     }
@@ -30,6 +30,11 @@ public class TaxpayerView extends VerticalLayout {
         filter.setClearButtonVisible(true);
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.addValueChangeListener(e -> updateListFilterByNameOrValue());
+    }
+
+    private void setTaxpayerGrid() {
+        taxpayerGrid.setSizeFull();
+        taxpayerGrid.setItems(taxpayerService.getTaxpayers());
     }
 
     private void updateListFilterByNameOrValue() {

@@ -43,7 +43,6 @@ public class InvoiceListView extends VerticalLayout {
     public InvoiceListView() {
         setFilter();
         setInvoiceIssueDateFilter();
-
         addGridColumns();
         setGridItemsDetails();
         setGridSettings();
@@ -157,17 +156,9 @@ public class InvoiceListView extends VerticalLayout {
                 dialog.close();
             });
             yesButton.getElement().setAttribute("theme", "error tertiary");
-
             cancelButton.addClickListener(clickEvent -> dialog.close());
-
             dialog.open();
-
-//            invoiceService.deleteInvoice(invoiceDto.getId());
-//            refreshGridItems(grid);
         }));
-//        grid.addComponentColumn(invoiceDto -> new Button("Edit", click -> {
-//            getUI().ifPresent(ui -> ui.navigate("invoice"));
-//        }));
         grid.addComponentColumn(invoiceDto -> new Button("Details",
                 click -> grid
                         .setDetailsVisible(
@@ -192,7 +183,6 @@ public class InvoiceListView extends VerticalLayout {
                         }
                         add(downloadLink);
                     });
-
                     return file;
                 }
         );
@@ -229,7 +219,6 @@ public class InvoiceListView extends VerticalLayout {
                 stamper.getAcroFields().setField("total" + number, itemsByInvoiceId.get(i).getValue().toString() + " PLN");
             }
         }
-
         stamper.close();
         pdfTemplate.close();
     }

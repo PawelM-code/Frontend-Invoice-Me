@@ -9,12 +9,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Stream;
 
-public class SecurityUtils {
+class SecurityUtils {
     static boolean isUserLoggedIn() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //
-        return authentication != null //
-                && !(authentication instanceof AnonymousAuthenticationToken) //
-                && authentication.isAuthenticated(); //
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null
+                && !(authentication instanceof AnonymousAuthenticationToken)
+                && authentication.isAuthenticated();
     }
 
     static boolean isFrameworkInternalRequest(HttpServletRequest request) {

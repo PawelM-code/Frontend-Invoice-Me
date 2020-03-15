@@ -19,6 +19,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.invoiceme.config.InvoiceMeAddress.APP_URL;
 import static com.vaadin.flow.component.icon.VaadinIcon.*;
 
 @Theme(value = Lumo.class)
@@ -53,7 +54,7 @@ public class MainLayout extends AppLayout {
             } else if (component instanceof TaxpayerView) {
                 getUI().ifPresent(ui -> ui.navigate("buyer"));
             } else if (component instanceof LogoutView) {
-                UI.getCurrent().getPage().setLocation("http://localhost:8080/logout");
+                UI.getCurrent().getPage().setLocation(APP_URL + "/logout");
             }
         });
 

@@ -31,7 +31,6 @@ public class FindBuyerLayout extends FormLayout {
         setFindTaxpayerButton();
         getFormLayoutFindBuyer();
         getFormLayoutCompleteBuyerData();
-
     }
 
     private void getFormLayoutCompleteBuyerData() {

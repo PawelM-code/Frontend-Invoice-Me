@@ -24,42 +24,43 @@ import static com.invoiceme.domain.InvoiceCurrency.*;
 public class CurrenciesView extends VerticalLayout {
     private CurrencyService currencyService = new CurrencyService();
     private CurrencyDto currencyDto;
+    private FormLayout findRateLayout = new FormLayout();
     private Grid<CurrencyDto> currencyGrid = new Grid<>();
-    private Select<InvoiceCurrency> selectCurrency = new Select<>();
-    private DatePicker currencyRateDate = new DatePicker("Date");
-    private Label rate = new Label();
+    private Select<InvoiceCurrency> selectCurrency;
+    private DatePicker currencyRateDate;
+    private Label rate;
     private Button getRate;
     private Button saveRate;
-    private FormLayout fLGetRate = new FormLayout();
 
 
     public CurrenciesView() {
-        getCurrencyGrid();
+        addCurrencyGridColumns();
         refreshCurrencyGrid(currencyGrid);
         getCurrency();
         getCurrencyRateDate();
         getRateLabel();
         getRateButton();
         getSaveRateButton();
-        getFormLayoutCurrencyRateFields();
+        getFindRateLayout();
 
-        add(fLGetRate, currencyGrid);
+        add(findRateLayout, currencyGrid);
     }
 
     private void getRateLabel() {
+        rate = new Label();
         rate.setMaxWidth("5em");
         rate.setTitle("Rate");
     }
 
-    private void getFormLayoutCurrencyRateFields() {
-        fLGetRate.setResponsiveSteps(
+    private void getFindRateLayout() {
+        findRateLayout.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("35em", 1),
                 new FormLayout.ResponsiveStep("45em", 2),
                 new FormLayout.ResponsiveStep("25em", 3),
                 new FormLayout.ResponsiveStep("5em", 4),
                 new FormLayout.ResponsiveStep("25em", 5));
-        fLGetRate.setMaxWidth("45em");
-        fLGetRate.add(selectCurrency, currencyRateDate, getRate, rate, saveRate);
+        findRateLayout.setMaxWidth("45em");
+        findRateLayout.add(selectCurrency, currencyRateDate, getRate, rate, saveRate);
     }
 
     private void getSaveRateButton() {
@@ -79,16 +80,18 @@ public class CurrenciesView extends VerticalLayout {
     }
 
     private void getCurrencyRateDate() {
+        currencyRateDate = new DatePicker("Date");
         currencyRateDate.setValue(LocalDate.now());
         currencyRateDate.setLocale(Locale.GERMANY);
     }
 
     private void getCurrency() {
+        selectCurrency = new Select<>();
         selectCurrency.setItems(EUR, USD, CHF);
         selectCurrency.setLabel("Currency code");
     }
 
-    private void getCurrencyGrid() {
+    private void addCurrencyGridColumns() {
         currencyGrid.addColumn(CurrencyDto::getId)
                 .setHeader("ID")
                 .setSortable(true)

@@ -24,8 +24,4 @@ public class OwnerService {
     public void saveOwner(OwnerDto ownerDto) {
         restTemplate.postForObject(OWNER_ENDPOINT, ownerDto, OwnerDto.class);
     }
-
-    public void updateOwner(OwnerDto ownerDto) {
-        restTemplate.put(OWNER_ENDPOINT, ownerDto, OwnerDto.class);
-    }
 }

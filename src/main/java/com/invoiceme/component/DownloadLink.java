@@ -19,7 +19,7 @@ public class DownloadLink extends Anchor {
         add(anchor);
     }
 
-    public StreamResource getStreamResource(String filename, File content) {
+    private StreamResource getStreamResource(String filename, File content) {
         return new StreamResource(filename, () -> {
             try {
                 return new BufferedInputStream(new FileInputStream(content));

@@ -14,17 +14,22 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
+import lombok.Getter;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.WeakHashMap;
 
+@Getter
 @PreserveOnRefresh
 @Route(value = "product", layout = MainLayout.class)
 public class ProductView extends VerticalLayout {
     private ProductService productService = new ProductService();
     private Grid<ProductDto> grid = new Grid<>();
     private FormLayout fLCreateProduct = new FormLayout();
+    private TextField description;
+    private IntegerField vat;
+    private Button buttonCreateProduct;
 
 
     public ProductView() {
@@ -37,9 +42,9 @@ public class ProductView extends VerticalLayout {
     }
 
     private void getCreateProductFormLayout() {
-        TextField description = new TextField("Description");
-        IntegerField vat = new IntegerField("VAT");
-        Button buttonCreateProduct = getButtonCreateProduct(grid, description, vat);
+        description = new TextField("Description");
+        vat = new IntegerField("VAT");
+        buttonCreateProduct = getButtonCreateProduct(grid, description, vat);
 
         fLCreateProduct.add(
                 description,
