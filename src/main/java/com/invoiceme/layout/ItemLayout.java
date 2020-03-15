@@ -3,11 +3,15 @@ package com.invoiceme.layout;
 import com.invoiceme.domain.ProductDto;
 import com.invoiceme.service.ProductService;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -20,6 +24,8 @@ public class ItemLayout extends FormLayout {
     public ItemLayout() {
         selectProducts.setRequiredIndicatorVisible(true);
         netPrice.setRequiredIndicatorVisible(true);
+        netPrice.setPrefixComponent(new Label("PLN"));
+        netPrice.addThemeVariants(TextFieldVariant.LUMO_ALIGN_RIGHT);
         quantity.setRequiredIndicatorVisible(true);
         initLayout();
         setResponsiveSteps(

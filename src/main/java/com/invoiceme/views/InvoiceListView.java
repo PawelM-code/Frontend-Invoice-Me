@@ -15,6 +15,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -72,61 +73,30 @@ public class InvoiceListView extends VerticalLayout {
         grid.setDetailsVisibleOnClick(false);
     }
 
-    private void setGridItemsDetails() {
-        grid.setItemDetailsRenderer(new ComponentRenderer<>(invoiceDto -> {
-            VerticalLayout verticalLayoutInvoiceDetails = new VerticalLayout();
-            List<ItemDto> itemsByInvoiceId = itemService.getItemsByInvoiceId(invoiceDto.getId());
-
-            Grid<ItemDto> details = new Grid<>();
-            details.setSizeFull();
-            details.addThemeNames("no-row-borders", "row-stripes", "no-headers");
-            if (!itemsByInvoiceId.isEmpty()) {
-                details.setItems(itemsByInvoiceId);
-                details.addColumn(itemDto -> itemDto
-                        .getProductDto()
-                        .getDescription())
-                        .setHeader("Description");
-                details.addColumn(ItemDto::getNetPrice)
-                        .setHeader("Net price PLN");
-                details.addColumn(ItemDto::getVat)
-                        .setHeader("VAT PLN");
-                details.addColumn(ItemDto::getGrossPrice)
-                        .setHeader("Gross price PLN");
-                details.addColumn(ItemDto::getQuantity)
-                        .setHeader("Quantity");
-                details.addColumn(ItemDto::getValue)
-                        .setHeader("Total PLN");
-                details.setHeightByRows(true);
-                verticalLayoutInvoiceDetails.setSizeFull();
-                verticalLayoutInvoiceDetails.add(details);
-            }
-            return verticalLayoutInvoiceDetails;
-        }));
-    }
-
     private void addGridColumns() {
         grid.addColumn(InvoiceDto::getId)
                 .setHeader("ID")
-                .setSortable(true);
+                .setSortable(true)
+                .setFlexGrow(0);
         grid.addColumn(InvoiceDto::getNumber)
                 .setHeader("Number")
                 .setSortable(true);
         grid.addColumn(InvoiceDto::getIssueDate)
                 .setHeader("Date of issue")
                 .setSortable(true);
-        grid.addColumn(InvoiceDto::getDateOfPayment)
-                .setHeader("Date of payment")
-                .setSortable(true);
-        grid.addColumn(invoiceDto -> invoiceDto
-                .getTaxpayerDto()
-                .getName())
-                .setHeader("Buyer")
-                .setSortable(true);
+//        grid.addColumn(InvoiceDto::getDateOfPayment)
+//                .setHeader("Date of payment")
+//                .setSortable(true);
+//        grid.addColumn(invoiceDto -> invoiceDto
+//                .getTaxpayerDto()
+//                .getName())
+//                .setHeader("Buyer")
+//                .setSortable(true);
         grid.addColumn(InvoiceDto::getNetTotal)
                 .setHeader("Net PLN")
                 .setSortable(true);
         grid.addColumn(InvoiceDto::getVatTotal)
-                .setHeader("VAT PLN")
+                .setHeader("TAX PLN")
                 .setSortable(true);
         grid.addColumn(InvoiceDto::getGrossTotal)
                 .setHeader("Gross PLN")
@@ -188,6 +158,45 @@ public class InvoiceListView extends VerticalLayout {
         );
     }
 
+    private void setGridItemsDetails() {
+        grid.setItemDetailsRenderer(new ComponentRenderer<>(invoiceDto -> {
+            VerticalLayout verticalLayoutInvoiceDetails = new VerticalLayout();
+            List<ItemDto> itemsByInvoiceId = itemService.getItemsByInvoiceId(invoiceDto.getId());
+            TextField buyer = new TextField("Buyer");
+            buyer.setValue(invoiceDto.getTaxpayerDto().getName() + ", NIP: "
+                    + invoiceDto.getTaxpayerDto().getNip());
+            buyer.setReadOnly(true);
+            buyer.setWidth("40em");
+            TextField paymentDate = new TextField("Date of payment");
+            paymentDate.setValue(invoiceDto.getDateOfPayment());
+            paymentDate.setReadOnly(true);
+            Grid<ItemDto> details = new Grid<>();
+            details.setSizeFull();
+            details.addThemeNames("no-row-borders", "row-stripes", "no-headers");
+            if (!itemsByInvoiceId.isEmpty()) {
+                details.setItems(itemsByInvoiceId);
+                details.addColumn(itemDto -> itemDto
+                        .getProductDto()
+                        .getDescription())
+                        .setHeader("Description");
+                details.addColumn(ItemDto::getNetPrice)
+                        .setHeader("Net price PLN");
+                details.addColumn(ItemDto::getVat)
+                        .setHeader("TAX PLN");
+                details.addColumn(ItemDto::getGrossPrice)
+                        .setHeader("Gross price PLN");
+                details.addColumn(ItemDto::getQuantity)
+                        .setHeader("Quantity");
+                details.addColumn(ItemDto::getValue)
+                        .setHeader("Total PLN");
+                details.setHeightByRows(true);
+                verticalLayoutInvoiceDetails.setSizeFull();
+                verticalLayoutInvoiceDetails.add(buyer, paymentDate, details);
+            }
+            return verticalLayoutInvoiceDetails;
+        }));
+    }
+
     private void generatePDF(InvoiceDto invoiceDto, File file) throws IOException, DocumentException {
         List<ItemDto> itemsByInvoiceId = itemService.getItemsByInvoiceId(invoiceDto.getId());
 
@@ -205,9 +214,9 @@ public class InvoiceListView extends VerticalLayout {
         stamper.getAcroFields().setField("gross", invoiceDto.getGrossTotal().toString() + " PLN");
         stamper.getAcroFields().setField("currency", invoiceDto.getCurrencyGrossTotal().toString() + " " + invoiceDto.getInvoiceCurrency());
         stamper.getAcroFields().setField("payment", invoiceDto.getDateOfPayment());
-        stamper.getAcroFields().setField("myname", invoiceDto.getOwnerDto().getName());
-        stamper.getAcroFields().setField("myaddress", invoiceDto.getOwnerDto().getWorkingAddress());
-        stamper.getAcroFields().setField("mynip", invoiceDto.getOwnerDto().getNip().toString());
+        stamper.getAcroFields().setField("myname", invoiceDto.getOwnerDto().getName() + ", "
+                + invoiceDto.getOwnerDto().getWorkingAddress() + ", "
+                + invoiceDto.getOwnerDto().getNip().toString());
         stamper.getAcroFields().setField("account", invoiceDto.getOwnerDto().getBankAccount());
 
         if (!itemsByInvoiceId.isEmpty()) {

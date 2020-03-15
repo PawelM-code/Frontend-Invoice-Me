@@ -1,9 +1,12 @@
 package com.invoiceme.views;
 
+import com.invoiceme.component.DialogWindow;
 import com.invoiceme.domain.ProductDto;
 import com.invoiceme.layout.MainLayout;
 import com.invoiceme.service.ProductService;
+import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.editor.Editor;
@@ -27,6 +30,7 @@ public class ProductView extends VerticalLayout {
     private ProductService productService = new ProductService();
     private Grid<ProductDto> grid = new Grid<>();
     private FormLayout fLCreateProduct = new FormLayout();
+    private DialogWindow dialogWindow = new DialogWindow();
     private TextField description;
     private IntegerField vat;
     private Button buttonCreateProduct;
@@ -43,7 +47,10 @@ public class ProductView extends VerticalLayout {
 
     private void getCreateProductFormLayout() {
         description = new TextField("Description");
-        vat = new IntegerField("VAT");
+        description.setRequiredIndicatorVisible(true);
+        vat = new IntegerField("TAX");
+        vat.setMax(100);
+        vat.setRequiredIndicatorVisible(true);
         buttonCreateProduct = getButtonCreateProduct(grid, description, vat);
 
         fLCreateProduct.add(
@@ -66,7 +73,7 @@ public class ProductView extends VerticalLayout {
                 .setHeader("Description");
         Grid.Column<ProductDto> vatColumn = grid
                 .addColumn(ProductDto::getVat)
-                .setHeader("VAT");
+                .setHeader("TAX");
 
         addEditColumn(grid, descriptionColumn, vatColumn);
         addDeleteColumn(grid);
@@ -75,10 +82,15 @@ public class ProductView extends VerticalLayout {
     private Button getButtonCreateProduct(Grid<ProductDto> grid, TextField description, IntegerField vat) {
         Button buttonCreateProduct = new Button("Create product");
         buttonCreateProduct.addClickListener(event -> {
-            productService.createProduct(description.getValue(), vat.getValue());
-            description.clear();
+            if(!description.isEmpty() && !vat.isEmpty()){
+                productService.createProduct(description.getValue(), vat.getValue());
+                description.clear();
 
-            refreshGridItems(grid);
+                refreshGridItems(grid);
+            }else {
+                dialogWindow.setDialog("<p><b>Please complete required fields.</b></p>");
+            }
+
         });
         return buttonCreateProduct;
     }

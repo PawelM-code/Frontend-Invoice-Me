@@ -1,5 +1,6 @@
 package com.invoiceme.views;
 
+import com.invoiceme.component.DialogWindow;
 import com.invoiceme.domain.CurrencyDto;
 import com.invoiceme.domain.InvoiceCurrency;
 import com.invoiceme.layout.MainLayout;
@@ -23,6 +24,7 @@ import static com.invoiceme.domain.InvoiceCurrency.*;
 @Route(value = "currency", layout = MainLayout.class)
 public class CurrenciesView extends VerticalLayout {
     private CurrencyService currencyService = new CurrencyService();
+    private DialogWindow dialogWindow = new DialogWindow();
     private CurrencyDto currencyDto;
     private FormLayout findRateLayout = new FormLayout();
     private Grid<CurrencyDto> currencyGrid = new Grid<>();
@@ -72,10 +74,14 @@ public class CurrenciesView extends VerticalLayout {
 
     private void getRateButton() {
         getRate = new Button("Get Rate", clickEvent -> {
-            currencyDto = currencyService.saveCurrencyRate(
-                    selectCurrency.getValue().toString(),
-                    currencyRateDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            rate.setText(currencyDto.getRates()[0].getMid().toString());
+            if (!selectCurrency.isEmpty()) {
+                currencyDto = currencyService.saveCurrencyRate(
+                        selectCurrency.getValue().toString(),
+                        currencyRateDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                rate.setText(currencyDto.getRates()[0].getMid().toString());
+            } else {
+                dialogWindow.setDialog("<p><b>Please complete required fields.</b></p>");
+            }
         });
     }
 

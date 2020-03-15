@@ -1,5 +1,6 @@
 package com.invoiceme.views;
 
+import com.invoiceme.component.DialogWindow;
 import com.invoiceme.component.ValidateComponent;
 import com.invoiceme.domain.InvoiceCurrency;
 import com.invoiceme.domain.InvoiceDto;
@@ -12,10 +13,8 @@ import com.invoiceme.service.ItemService;
 import com.invoiceme.service.OwnerService;
 import com.invoiceme.service.TaxpayerService;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
@@ -41,6 +40,7 @@ public class InvoiceView extends VerticalLayout {
     private InvoiceDto invoiceDto = new InvoiceDto();
     private FindBuyerLayout findBuyerLayout = new FindBuyerLayout();
     private ValidateComponent validateComponent = new ValidateComponent();
+    private DialogWindow dialogWindow = new DialogWindow();
     private FormLayout saveLayout;
     private FormLayout invoiceNumberLayout;
     private FormLayout addOrRemoveItemLayout;
@@ -51,7 +51,6 @@ public class InvoiceView extends VerticalLayout {
     private Button addItem;
     private Button removeItem;
     private Button saveInvoice;
-    private Dialog dialog = new Dialog();
     private List<Component> componentsToValidate;
 
     public InvoiceView() {
@@ -172,26 +171,13 @@ public class InvoiceView extends VerticalLayout {
                 });
                 invoiceService.updateInvoice(invoiceDto);
 
-                setDialog("<p><b>Confirm invoice save!</b></p>");
+                dialogWindow.setDialog("<p><b>Confirm invoice save!</b></p>");
 
                 UI.getCurrent().getPage().setLocation(APP_URL + "/invoice");
             } else {
-                setDialog("<p><b>Please complete required fields.</b></p>");
+                dialogWindow.setDialog("<p><b>Please complete required fields.</b></p>");
             }
         });
-    }
-
-    private void setDialog(String html) {
-        dialog.removeAll();
-        dialog.setCloseOnEsc(false);
-        dialog.setCloseOnOutsideClick(false);
-        Button cancelButton = new Button("Cancel");
-        cancelButton.addClickListener(clickEvent -> dialog.close());
-
-        Html header = new Html(html);
-
-        dialog.add(header, cancelButton);
-        dialog.open();
     }
 
     private List<Component> getComponentsList() {
