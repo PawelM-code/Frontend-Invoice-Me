@@ -54,11 +54,11 @@ public class TaxpayerView extends VerticalLayout {
         taxpayerGrid.addColumn(TaxpayerDto::getName)
                 .setHeader("NAME")
                 .setSortable(true)
-                .setFlexGrow(1);
+                .setFlexGrow(2);
         taxpayerGrid.addColumn(TaxpayerDto::getWorkingAddress)
                 .setHeader("ADDRESS")
                 .setSortable(true)
-                .setFlexGrow(3);
+                .setFlexGrow(2);
         taxpayerGrid.addColumn(TaxpayerDto::getNip)
                 .setHeader("NIP")
                 .setSortable(true)

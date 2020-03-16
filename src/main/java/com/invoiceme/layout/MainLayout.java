@@ -68,7 +68,7 @@ public class MainLayout extends AppLayout {
     }
 
     private Tab home() {
-        final Label label = new Label("Home");
+        final Label label = new Label("HOME");
         final Icon icon = HOME_O.create();
         final Tab tab = new Tab(getVerticalMenuBarLayout(label, icon));
         tab2Workspace.put(tab, new MainView());
@@ -76,7 +76,7 @@ public class MainLayout extends AppLayout {
     }
 
     private Tab invoiceCreator() {
-        final Label label = new Label("Invoice creator");
+        final Label label = new Label("INVOICE CREATOR");
         final Icon icon = INVOICE.create();
         final Tab tab = new Tab(getVerticalMenuBarLayout(label, icon));
         tab2Workspace.put(tab, new InvoiceView());
@@ -84,7 +84,7 @@ public class MainLayout extends AppLayout {
     }
 
     private Tab invoices() {
-        final Label label = new Label("Invoices");
+        final Label label = new Label("INVOICES");
         final Icon icon = LINES_LIST.create();
         final Tab tab = new Tab(getVerticalMenuBarLayout(label, icon));
         tab2Workspace.put(tab, new InvoiceListView());
@@ -92,7 +92,7 @@ public class MainLayout extends AppLayout {
     }
 
     private Tab product() {
-        final Label label = new Label("Product");
+        final Label label = new Label("PRODUCTS");
         final Icon icon = CART_O.create();
         final Tab tab = new Tab(getVerticalMenuBarLayout(label, icon));
         tab2Workspace.put(tab, new ProductView());
@@ -100,7 +100,7 @@ public class MainLayout extends AppLayout {
     }
 
     private Tab currencies() {
-        final Label label = new Label("Currency");
+        final Label label = new Label("CURRENCY");
         final Icon icon = DOLLAR.create();
         final Tab tab = new Tab(getVerticalMenuBarLayout(label, icon));
         tab2Workspace.put(tab, new CurrenciesView());
@@ -108,7 +108,7 @@ public class MainLayout extends AppLayout {
     }
 
     private Tab mycompany() {
-        final Label label = new Label("My Company");
+        final Label label = new Label("MY COMPANY");
         final Icon icon = USER_CARD.create();
         final Tab tab = new Tab(getVerticalMenuBarLayout(label, icon));
         tab2Workspace.put(tab, new OwnerView());
@@ -116,7 +116,7 @@ public class MainLayout extends AppLayout {
     }
 
     private Tab taxpayer() {
-        final Label label = new Label("Buyers");
+        final Label label = new Label("BUYERS");
         final Icon icon = DATABASE.create();
         final Tab tab = new Tab(getVerticalMenuBarLayout(label, icon));
         tab2Workspace.put(tab, new TaxpayerView());
@@ -124,7 +124,7 @@ public class MainLayout extends AppLayout {
     }
 
     private Tab logout() {
-        final Label label = new Label("Logout");
+        final Label label = new Label("LOGOUT");
         final Icon icon = OUT.create();
         final Tab tab = new Tab(getVerticalMenuBarLayout(label, icon));
         tab2Workspace.put(tab, new LogoutView());

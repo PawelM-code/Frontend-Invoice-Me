@@ -25,9 +25,11 @@ public class OwnerView extends VerticalLayout {
     private TextField workingAddress = new TextField("ADDRESS");
     private TextField bankAccount = new TextField("BANK ACCOUNT");
     private TextField email = new TextField("EMAIL");
-    private Button saveBuyerData = new Button("SAVE");
+    private Button saveOwnerData = new Button("SAVE");
     private Button addNewCompanyData;
-    private FormLayout fLCompanyData;
+    private FormLayout companyDataLayout;
+    private VerticalLayout companyDataLabelLayout;
+    private VerticalLayout newCompanyDataLayout;
     private Label myName;
     private Label myNip;
     private Label myRegon;
@@ -41,9 +43,10 @@ public class OwnerView extends VerticalLayout {
         getFormLayoutCompanyData();
         addSaveCompanyDataButton();
         getAddNewCompanyData();
-        VerticalLayout companyDataLayout = getCompanyDataLayout();
+        getCurrentCompanyDataLayout();
+        gerNewCompanyDataLayout();
 
-        add(companyDataLayout, fLCompanyData);
+        add(companyDataLabelLayout, newCompanyDataLayout);
         setSizeFull();
         setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         setAlignItems(FlexComponent.Alignment.CENTER);
@@ -52,34 +55,42 @@ public class OwnerView extends VerticalLayout {
     private void getAddNewCompanyData() {
         addNewCompanyData = new Button("ADD NEW COMPANY DATA");
         addNewCompanyData.addClickListener(clickEvent -> {
-            if (!fLCompanyData.isVisible()) {
-                fLCompanyData.setVisible(true);
+            if (!newCompanyDataLayout.isVisible()) {
+                newCompanyDataLayout.setVisible(true);
             } else {
-                fLCompanyData.setVisible(false);
+                newCompanyDataLayout.setVisible(false);
             }
         });
     }
 
-    private VerticalLayout getCompanyDataLayout() {
-        VerticalLayout companyDataLayout = new VerticalLayout();
-        companyDataLayout.setSizeFull();
-        companyDataLayout.setJustifyContentMode(JustifyContentMode.CENTER);
-        companyDataLayout.setAlignItems(Alignment.CENTER);
-        companyDataLayout.add(myName, myNip, myAddress, myRegon, myBankAccount, myEmail, addNewCompanyData);
-        companyDataLayout.setSizeFull();
-        companyDataLayout.setJustifyContentMode(JustifyContentMode.CENTER);
-        companyDataLayout.setAlignItems(Alignment.CENTER);
-        return companyDataLayout;
+    private void getCurrentCompanyDataLayout() {
+        companyDataLabelLayout = new VerticalLayout();
+        companyDataLabelLayout.setSizeFull();
+        companyDataLabelLayout.setJustifyContentMode(JustifyContentMode.CENTER);
+        companyDataLabelLayout.setAlignItems(Alignment.CENTER);
+        companyDataLabelLayout.add(myName, myNip, myAddress, myRegon, myBankAccount, myEmail, addNewCompanyData);
+        companyDataLabelLayout.setSizeFull();
+        companyDataLabelLayout.setJustifyContentMode(JustifyContentMode.CENTER);
+        companyDataLabelLayout.setAlignItems(Alignment.CENTER);
     }
 
     private void setOwnerDataLabels() {
-        OwnerDto currentOwnerDto = ownerService.getOwner((long) ownerService.getOwners().size());
-        myName = new Label(currentOwnerDto.getName());
-        myNip = new Label("NIP: " + currentOwnerDto.getNip().toString());
-        myRegon = new Label("REGON: " + currentOwnerDto.getRegon().toString());
-        myAddress = new Label(currentOwnerDto.getWorkingAddress());
-        myBankAccount = new Label("BANK ACCOUNT: " + currentOwnerDto.getBankAccount());
-        myEmail = new Label(currentOwnerDto.getEmail());
+        if (ownerService.getOwners().size() > 0) {
+            OwnerDto currentOwnerDto = ownerService.getOwner((long) ownerService.getOwners().size());
+            myName = new Label(currentOwnerDto.getName());
+            myNip = new Label("NIP: " + currentOwnerDto.getNip().toString());
+            myRegon = new Label("REGON: " + currentOwnerDto.getRegon().toString());
+            myAddress = new Label(currentOwnerDto.getWorkingAddress());
+            myBankAccount = new Label("BANK ACCOUNT: " + currentOwnerDto.getBankAccount());
+            myEmail = new Label(currentOwnerDto.getEmail());
+        } else {
+            myName = new Label("");
+            myNip = new Label("");
+            myRegon = new Label("");
+            myAddress = new Label("");
+            myBankAccount = new Label("");
+            myEmail = new Label("");
+        }
     }
 
     private void addSaveCompanyDataButton() {
@@ -94,40 +105,50 @@ public class OwnerView extends VerticalLayout {
             bankAccount.setValue(myCompanyData.get(companyDataNewestPossition).getBankAccount());
             email.setValue(myCompanyData.get(companyDataNewestPossition).getEmail());
 
-            fLCompanyData.add(saveBuyerData);
-            saveBuyerData.setMaxWidth("25em");
-
-            saveBuyerData.addClickListener(event -> {
-                OwnerDto ownerDto = new OwnerDto(
-                        name.getValue(),
-                        Long.valueOf(nip.getValue()),
-                        Long.valueOf(regon.getValue()),
-                        workingAddress.getValue(),
-                        bankAccount.getValue(),
-                        email.getValue());
-                ownerService.saveOwner(ownerDto);
-                UI.getCurrent().getPage().setLocation(APP_URL + "/mycompany");
-            });
+            setSaveOwnerDataButton();
+        } else {
+            setSaveOwnerDataButton();
         }
+
+    }
+
+    private void setSaveOwnerDataButton() {
+        saveOwnerData.setWidth("20em");
+        saveOwnerData.addClickListener(event -> {
+            OwnerDto ownerDto = new OwnerDto(
+                    name.getValue(),
+                    Long.valueOf(nip.getValue()),
+                    Long.valueOf(regon.getValue()),
+                    workingAddress.getValue(),
+                    bankAccount.getValue(),
+                    email.getValue());
+            ownerService.saveOwner(ownerDto);
+            UI.getCurrent().getPage().setLocation(APP_URL + "/mycompany");
+        });
     }
 
     private void getFormLayoutCompanyData() {
-        fLCompanyData = new FormLayout();
-        fLCompanyData.setVisible(false);
-        fLCompanyData.setMaxWidth("120em");
-        fLCompanyData.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("35em", 1),
-                new FormLayout.ResponsiveStep("35em", 2),
-                new FormLayout.ResponsiveStep("35em", 3));
-        fLCompanyData.setMaxWidth("45em");
-        fLCompanyData.getStyle().set("margin", "auto");
+        companyDataLayout = new FormLayout();
+        companyDataLayout.setSizeFull();
+        companyDataLayout.setResponsiveSteps(
+                new FormLayout.ResponsiveStep("25em", 1),
+                new FormLayout.ResponsiveStep("32em", 2),
+                new FormLayout.ResponsiveStep("40em", 3));
 
-        fLCompanyData.add(
+        companyDataLayout.add(
                 name,
                 nip,
                 regon,
                 workingAddress,
                 bankAccount,
                 email);
+    }
+
+    private void gerNewCompanyDataLayout() {
+        newCompanyDataLayout = new VerticalLayout();
+        newCompanyDataLayout.setVisible(false);
+        newCompanyDataLayout.setJustifyContentMode(JustifyContentMode.CENTER);
+        newCompanyDataLayout.setAlignItems(Alignment.CENTER);
+        newCompanyDataLayout.add(companyDataLayout, saveOwnerData);
     }
 }

@@ -59,6 +59,7 @@ public class InvoiceListView extends VerticalLayout {
     }
 
     private void setFilter() {
+        filter.setWidth("25em");
         filter.setPlaceholder("Filter by buyer, number...");
         filter.setClearButtonVisible(true);
         filter.setValueChangeMode(ValueChangeMode.EAGER);

@@ -39,7 +39,9 @@ public class InvoiceView extends VerticalLayout {
     private TaxpayerService taxpayerService = new TaxpayerService();
     private ItemService itemService = new ItemService();
     private InvoiceDto invoiceDto = new InvoiceDto();
-    private FindBuyerLayout findBuyerLayout = new FindBuyerLayout();
+    private FindBuyerLayout findBuyerLayout;
+    private FormLayout buyerSearchLayout;
+    private FormLayout completeBuyerDataLayout;
     private ValidateComponent validateComponent = new ValidateComponent();
     private FlexLayout saveLayout = new FlexLayout();
     private DialogWindow dialogWindow = new DialogWindow();
@@ -57,6 +59,7 @@ public class InvoiceView extends VerticalLayout {
     public InvoiceView() {
         getInvoiceNumber();
         getInvoiceNumberLayout();
+        getFindBuyerLayouts();
         getCurrency();
         getComment();
         getCurrencyAndCommentLayout();
@@ -68,8 +71,9 @@ public class InvoiceView extends VerticalLayout {
 
         setSizeFull();
         add(invoiceNumberLayout,
-                findBuyerLayout.getFLFindBuyer(),
-                findBuyerLayout.getFLCompleteBuyerData(),
+                buyerSearchLayout,
+                completeBuyerDataLayout,
+                findBuyerLayout.getCompleteBuyerDataLayout(),
                 currencyAndCommentLayout,
                 addOrRemoveItemLayout,
                 new ItemLayout(),
@@ -86,6 +90,12 @@ public class InvoiceView extends VerticalLayout {
         invoiceNumberLayout = new FormLayout();
         invoiceNumberLayout.add(invoiceNumber);
         setFormLayoutInvoiceNumber();
+    }
+
+    private void getFindBuyerLayouts() {
+        findBuyerLayout = new FindBuyerLayout();
+        buyerSearchLayout = findBuyerLayout.getFindBuyerLayout();
+        completeBuyerDataLayout = findBuyerLayout.getCompleteBuyerDataLayout();
     }
 
     private void setFormLayoutInvoiceNumber() {

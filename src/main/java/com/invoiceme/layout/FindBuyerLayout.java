@@ -16,8 +16,8 @@ import java.util.Locale;
 public class FindBuyerLayout extends FormLayout {
     private TaxpayerService taxpayerService = new TaxpayerService();
     private TaxpayerDto taxpayerDto = new TaxpayerDto();
-    private FormLayout fLFindBuyer = new FormLayout();
-    private FormLayout fLCompleteBuyerData = new FormLayout();
+    private FormLayout findBuyerLayout = new FormLayout();
+    private FormLayout completeBuyerDataLayout = new FormLayout();
     private DatePicker issueDate = setDatePicker("DATE OF ISSUE");
     private DatePicker paymentDate = setDatePicker("DATE OF PAYMENT");
     private TextField nip = new TextField("BUYER NIP");
@@ -34,30 +34,30 @@ public class FindBuyerLayout extends FormLayout {
     }
 
     private void getFormLayoutCompleteBuyerData() {
-        fLCompleteBuyerData.setSizeFull();
-        fLCompleteBuyerData.setResponsiveSteps(
+        completeBuyerDataLayout.setSizeFull();
+        completeBuyerDataLayout.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("25em", 1),
                 new FormLayout.ResponsiveStep("32em", 2),
                 new FormLayout.ResponsiveStep("40em", 3));
 
-        fLCompleteBuyerData.add(
+        completeBuyerDataLayout.add(
                 buyerName,
                 regon,
                 buyerWorkingAddress);
     }
 
     private void getFormLayoutFindBuyer() {
-        fLFindBuyer.setSizeFull();
-        fLFindBuyer.setResponsiveSteps(
+        findBuyerLayout.setSizeFull();
+        findBuyerLayout.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("25em", 1),
                 new FormLayout.ResponsiveStep("25em", 2),
                 new FormLayout.ResponsiveStep("25em", 3));
-        fLFindBuyer.add(
+        findBuyerLayout.add(
                 nip,
                 issueDate,
                 paymentDate,
                 findTaxpayer);
-        fLFindBuyer.setColspan(findTaxpayer, 1);
+        findBuyerLayout.setColspan(findTaxpayer, 1);
 
     }
 
