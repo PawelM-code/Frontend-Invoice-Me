@@ -15,7 +15,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -79,33 +78,25 @@ public class InvoiceListView extends VerticalLayout {
                 .setSortable(true)
                 .setFlexGrow(0);
         grid.addColumn(InvoiceDto::getNumber)
-                .setHeader("Number")
+                .setHeader("NUMBER")
                 .setSortable(true);
         grid.addColumn(InvoiceDto::getIssueDate)
-                .setHeader("Date of issue")
+                .setHeader("DATE OF ISSUE")
                 .setSortable(true);
-//        grid.addColumn(InvoiceDto::getDateOfPayment)
-//                .setHeader("Date of payment")
-//                .setSortable(true);
-//        grid.addColumn(invoiceDto -> invoiceDto
-//                .getTaxpayerDto()
-//                .getName())
-//                .setHeader("Buyer")
-//                .setSortable(true);
         grid.addColumn(InvoiceDto::getNetTotal)
-                .setHeader("Net PLN")
+                .setHeader("NET PLN")
                 .setSortable(true);
         grid.addColumn(InvoiceDto::getVatTotal)
                 .setHeader("TAX PLN")
                 .setSortable(true);
         grid.addColumn(InvoiceDto::getGrossTotal)
-                .setHeader("Gross PLN")
+                .setHeader("GROSS PLN")
                 .setSortable(true);
         grid.addColumn(InvoiceDto::getCurrencyGrossTotal)
-                .setHeader("Currency gross total")
+                .setHeader("CURRENCY GROSS")
                 .setSortable(true);
         grid.addColumn(InvoiceDto::getInvoiceCurrency)
-                .setHeader("Currency")
+                .setHeader("CURRENCY")
                 .setSortable(true);
         Dialog dialog = new Dialog();
         dialog.setCloseOnEsc(false);
@@ -114,11 +105,11 @@ public class InvoiceListView extends VerticalLayout {
         Html header = new Html("<p><b>Delete invoice</b></p>");
         Html text = new Html("<p>Do you want to <b>delete</b> invoice ?</p>");
 
-        Button yesButton = new Button("Yes", VaadinIcon.TRASH.create());
-        Button cancelButton = new Button("No");
+        Button yesButton = new Button("YES", VaadinIcon.TRASH.create());
+        Button cancelButton = new Button("NO");
         dialog.add(header, text, yesButton, cancelButton);
 
-        grid.addComponentColumn(invoiceDto -> new Button("Delete", click -> {
+        grid.addComponentColumn(invoiceDto -> new Button("DELETE", click -> {
 
             yesButton.addClickListener(e -> {
                 invoiceService.deleteInvoice(invoiceDto.getId());
@@ -129,7 +120,7 @@ public class InvoiceListView extends VerticalLayout {
             cancelButton.addClickListener(clickEvent -> dialog.close());
             dialog.open();
         }));
-        grid.addComponentColumn(invoiceDto -> new Button("Details",
+        grid.addComponentColumn(invoiceDto -> new Button("DETAILS",
                 click -> grid
                         .setDetailsVisible(
                                 invoiceDto,
@@ -162,12 +153,12 @@ public class InvoiceListView extends VerticalLayout {
         grid.setItemDetailsRenderer(new ComponentRenderer<>(invoiceDto -> {
             VerticalLayout verticalLayoutInvoiceDetails = new VerticalLayout();
             List<ItemDto> itemsByInvoiceId = itemService.getItemsByInvoiceId(invoiceDto.getId());
-            TextField buyer = new TextField("Buyer");
+            TextField buyer = new TextField("BUYER");
             buyer.setValue(invoiceDto.getTaxpayerDto().getName() + ", NIP: "
                     + invoiceDto.getTaxpayerDto().getNip());
             buyer.setReadOnly(true);
             buyer.setWidth("40em");
-            TextField paymentDate = new TextField("Date of payment");
+            TextField paymentDate = new TextField("DATE OF PAYMENT");
             paymentDate.setValue(invoiceDto.getDateOfPayment());
             paymentDate.setReadOnly(true);
             Grid<ItemDto> details = new Grid<>();
@@ -178,17 +169,17 @@ public class InvoiceListView extends VerticalLayout {
                 details.addColumn(itemDto -> itemDto
                         .getProductDto()
                         .getDescription())
-                        .setHeader("Description");
+                        .setHeader("DESCRIPTION");
                 details.addColumn(ItemDto::getNetPrice)
-                        .setHeader("Net price PLN");
+                        .setHeader("NET PRICE PLN");
                 details.addColumn(ItemDto::getVat)
                         .setHeader("TAX PLN");
                 details.addColumn(ItemDto::getGrossPrice)
-                        .setHeader("Gross price PLN");
+                        .setHeader("GROSS PRICE PLN");
                 details.addColumn(ItemDto::getQuantity)
-                        .setHeader("Quantity");
+                        .setHeader("QUANTITY");
                 details.addColumn(ItemDto::getValue)
-                        .setHeader("Total PLN");
+                        .setHeader("TOTAL PLN");
                 details.setHeightByRows(true);
                 verticalLayoutInvoiceDetails.setSizeFull();
                 verticalLayoutInvoiceDetails.add(buyer, paymentDate, details);

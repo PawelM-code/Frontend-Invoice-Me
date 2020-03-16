@@ -4,9 +4,7 @@ import com.invoiceme.component.DialogWindow;
 import com.invoiceme.domain.ProductDto;
 import com.invoiceme.layout.MainLayout;
 import com.invoiceme.service.ProductService;
-import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.editor.Editor;
@@ -46,7 +44,7 @@ public class ProductView extends VerticalLayout {
     }
 
     private void getCreateProductFormLayout() {
-        description = new TextField("Description");
+        description = new TextField("DESCRIPTION");
         description.setRequiredIndicatorVisible(true);
         vat = new IntegerField("TAX");
         vat.setMax(100);
@@ -70,7 +68,7 @@ public class ProductView extends VerticalLayout {
                 .setFlexGrow(0);
         Grid.Column<ProductDto> descriptionColumn = grid
                 .addColumn(ProductDto::getDescription)
-                .setHeader("Description");
+                .setHeader("DESCRIPTION");
         Grid.Column<ProductDto> vatColumn = grid
                 .addColumn(ProductDto::getVat)
                 .setHeader("TAX");
@@ -80,14 +78,14 @@ public class ProductView extends VerticalLayout {
     }
 
     private Button getButtonCreateProduct(Grid<ProductDto> grid, TextField description, IntegerField vat) {
-        Button buttonCreateProduct = new Button("Create product");
+        Button buttonCreateProduct = new Button("SAVE PRODUCT");
         buttonCreateProduct.addClickListener(event -> {
-            if(!description.isEmpty() && !vat.isEmpty()){
+            if (!description.isEmpty() && !vat.isEmpty()) {
                 productService.createProduct(description.getValue(), vat.getValue());
                 description.clear();
 
                 refreshGridItems(grid);
-            }else {
+            } else {
                 dialogWindow.setDialog("<p><b>Please complete required fields.</b></p>");
             }
 
@@ -96,7 +94,7 @@ public class ProductView extends VerticalLayout {
     }
 
     private void addDeleteColumn(Grid<ProductDto> grid) {
-        grid.addComponentColumn(productDto -> new Button("Delete", click -> {
+        grid.addComponentColumn(productDto -> new Button("DELETE", click -> {
             productService.deleteProduct(productDto.getId());
             refreshGridItems(grid);
         }));
@@ -120,7 +118,7 @@ public class ProductView extends VerticalLayout {
                 .newSetFromMap(new WeakHashMap<>());
 
         Grid.Column<ProductDto> editorColumn = grid.addComponentColumn(productDto -> {
-            Button edit = new Button("Edit");
+            Button edit = new Button("EDIT");
             edit.addClassName("edit");
             edit.addClickListener(e -> {
                 editor.editItem(productDto);
@@ -136,10 +134,10 @@ public class ProductView extends VerticalLayout {
         editor.addCloseListener(e -> editButtons
                 .forEach(button -> button.setEnabled(!editor.isOpen())));
 
-        Button save = new Button("Save", e -> editor.save());
+        Button save = new Button("SAVE", e -> editor.save());
         save.addClassName("save");
 
-        Button cancel = new Button("Cancel", e -> editor.cancel());
+        Button cancel = new Button("CANCEL", e -> editor.cancel());
         cancel.addClassName("cancel");
 
         grid.getElement().addEventListener("keyup", event -> editor.cancel())

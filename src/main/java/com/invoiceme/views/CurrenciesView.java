@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.Route;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -66,27 +67,39 @@ public class CurrenciesView extends VerticalLayout {
     }
 
     private void getSaveRateButton() {
-        saveRate = new Button("Save", click -> {
+        saveRate = new Button("SAVE", click -> {
             currencyService.saveCurrencyRate(currencyDto);
             refreshCurrencyGrid(currencyGrid);
         });
     }
 
     private void getRateButton() {
-        getRate = new Button("Get Rate", clickEvent -> {
-            if (!selectCurrency.isEmpty()) {
-                currencyDto = currencyService.saveCurrencyRate(
-                        selectCurrency.getValue().toString(),
-                        currencyRateDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-                rate.setText(currencyDto.getRates()[0].getMid().toString());
+        getRate = new Button("GET RATE", clickEvent -> {
+            String currencyDate = currencyRateDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+            if (!isWeekend(currencyDate)) {
+                if (!selectCurrency.isEmpty()) {
+                    currencyDto = currencyService.saveCurrencyRate(
+                            selectCurrency.getValue().toString(),
+                            currencyDate);
+                    rate.setText(currencyDto.getRates()[0].getMid().toString());
+                } else {
+                    dialogWindow.setDialog("<p><b>Please complete required fields.</b></p>");
+                }
             } else {
-                dialogWindow.setDialog("<p><b>Please complete required fields.</b></p>");
+                dialogWindow.setDialog("<p><b>Please indicate a workday.</b></p>");
             }
+
         });
     }
 
+    private boolean isWeekend(String invoiceDate) {
+        LocalDate invoiceLocalDate = LocalDate.parse(invoiceDate);
+        return invoiceLocalDate.getDayOfWeek() == DayOfWeek.SATURDAY || invoiceLocalDate.getDayOfWeek() == DayOfWeek.SUNDAY;
+    }
+
     private void getCurrencyRateDate() {
-        currencyRateDate = new DatePicker("Date");
+        currencyRateDate = new DatePicker("DATE");
         currencyRateDate.setValue(LocalDate.now());
         currencyRateDate.setLocale(Locale.GERMANY);
     }
@@ -94,7 +107,7 @@ public class CurrenciesView extends VerticalLayout {
     private void getCurrency() {
         selectCurrency = new Select<>();
         selectCurrency.setItems(EUR, USD, CHF);
-        selectCurrency.setLabel("Currency code");
+        selectCurrency.setLabel("CURRENCY CODE");
     }
 
     private void addCurrencyGridColumns() {
@@ -105,18 +118,18 @@ public class CurrenciesView extends VerticalLayout {
         currencyGrid.addColumn(currencyDto -> Arrays
                 .stream(currencyDto.getRates())
                 .iterator().next().getEffectiveDate())
-                .setHeader("Date")
+                .setHeader("DATE")
                 .setSortable(true);
         currencyGrid.addColumn(CurrencyDto::getCode)
-                .setHeader("Code")
+                .setHeader("CODE")
                 .setSortable(true);
         currencyGrid.addColumn(CurrencyDto::getCurrency)
-                .setHeader("Currency")
+                .setHeader("CURRENCY")
                 .setSortable(true);
         currencyGrid.addColumn(currencyDto -> Arrays
                 .stream(currencyDto.getRates())
                 .iterator().next().getMid())
-                .setHeader("Rate")
+                .setHeader("RATE")
                 .setSortable(true);
     }
 

@@ -16,6 +16,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
@@ -40,8 +41,8 @@ public class InvoiceView extends VerticalLayout {
     private InvoiceDto invoiceDto = new InvoiceDto();
     private FindBuyerLayout findBuyerLayout = new FindBuyerLayout();
     private ValidateComponent validateComponent = new ValidateComponent();
+    private FlexLayout saveLayout = new FlexLayout();
     private DialogWindow dialogWindow = new DialogWindow();
-    private FormLayout saveLayout;
     private FormLayout invoiceNumberLayout;
     private FormLayout addOrRemoveItemLayout;
     private FormLayout currencyAndCommentLayout;
@@ -77,7 +78,7 @@ public class InvoiceView extends VerticalLayout {
 
     private void getInvoiceNumber() {
         invoiceNumber = new TextField();
-        invoiceNumber.setLabel("Invoice number");
+        invoiceNumber.setLabel("INVOICE NUMBER");
         invoiceNumber.setRequired(true);
     }
 
@@ -98,11 +99,11 @@ public class InvoiceView extends VerticalLayout {
         currencySelect.setRequiredIndicatorVisible(true);
         currencySelect.setItems(values());
         currencySelect.setValue(PLN);
-        currencySelect.setLabel("Currency");
+        currencySelect.setLabel("OPTIONALLY, SHOW THE AMOUNT ALSO IN A FOREIGN CURRENCY");
     }
 
     private void getComment() {
-        comment = new TextField("Comment");
+        comment = new TextField("COMMENT");
     }
 
     private void getCurrencyAndCommentLayout() {
@@ -114,13 +115,13 @@ public class InvoiceView extends VerticalLayout {
     }
 
     private void getAddItemButton() {
-        addItem = new Button("Add item");
+        addItem = new Button("ADD ITEM");
         addItem.addClickListener(event ->
                 addComponentAtIndex(getComponentCount() - 1, new ItemLayout()));
     }
 
     private void getRemoveItemButton() {
-        removeItem = new Button("Remove item");
+        removeItem = new Button("REMOVE ITEM");
         removeItem.addClickListener(event -> {
             List<Component> componentList = getChildren().collect(Collectors.toList());
             List<Component> itemLayoutList = componentList.stream().filter(component -> component instanceof ItemLayout).collect(Collectors.toList());
@@ -137,7 +138,11 @@ public class InvoiceView extends VerticalLayout {
     }
 
     private void getSaveInvoiceButton() {
-        saveInvoice = new Button("Save invoice");
+        saveInvoice = new Button("SAVE INVOICE");
+        saveInvoice.setHeight("45px");
+        saveInvoice.getStyle().set("background", "#3D94F6");
+        saveInvoice.getStyle().set("color", "#FFFFFF");
+        saveInvoice.getStyle().set("border", "solid #337FED 1px");
 
         saveInvoice.addClickListener(event -> {
             componentsToValidate = getComponentsList();
@@ -201,9 +206,10 @@ public class InvoiceView extends VerticalLayout {
     }
 
     private void getSaveLayout() {
-        saveLayout = new FormLayout();
+        saveLayout.setSizeFull();
+        saveLayout.setJustifyContentMode(JustifyContentMode.CENTER);
+        saveLayout.setAlignItems(Alignment.CENTER);
         saveLayout.add(saveInvoice);
-        setFormLayoutResponsiveSteps(saveLayout);
     }
 
     private void setFormLayoutResponsiveSteps(FormLayout formLayout) {

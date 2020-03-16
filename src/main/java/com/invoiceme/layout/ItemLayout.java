@@ -5,21 +5,19 @@ import com.invoiceme.service.ProductService;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import lombok.Getter;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
 public class ItemLayout extends FormLayout {
     private ProductService productService = new ProductService();
     private Select<ProductDto> selectProducts = new Select<>();
-    private NumberField netPrice = new NumberField("Net price");
-    private IntegerField quantity = new IntegerField("Quantity");
+    private NumberField netPrice = new NumberField("NET PRICE");
+    private IntegerField quantity = new IntegerField("QUANTITY");
 
     public ItemLayout() {
         selectProducts.setRequiredIndicatorVisible(true);
@@ -36,7 +34,7 @@ public class ItemLayout extends FormLayout {
     }
 
     private void initLayout() {
-        selectProducts.setLabel("Products");
+        selectProducts.setLabel("PRODUCT");
         List<ProductDto> productDtoList = productService.getProducts();
 
         selectProducts.setItemLabelGenerator(ProductDto::getDescription);
@@ -44,6 +42,4 @@ public class ItemLayout extends FormLayout {
 
         add(selectProducts, netPrice, quantity);
     }
-
-
 }

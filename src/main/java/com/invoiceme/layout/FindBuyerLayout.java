@@ -18,13 +18,13 @@ public class FindBuyerLayout extends FormLayout {
     private TaxpayerDto taxpayerDto = new TaxpayerDto();
     private FormLayout fLFindBuyer = new FormLayout();
     private FormLayout fLCompleteBuyerData = new FormLayout();
-    private DatePicker issueDate = setDatePicker("Date of issue");
-    private DatePicker paymentDate = setDatePicker("Date of payment");
-    private TextField nip = new TextField("NIP");
-    private TextField buyerName = new TextField("Buyer name");
-    private TextField regon = new TextField("REGON");
-    private TextField buyerWorkingAddress = new TextField("Address");
-    private Button findTaxpayer = new Button("Search");
+    private DatePicker issueDate = setDatePicker("DATE OF ISSUE");
+    private DatePicker paymentDate = setDatePicker("DATE OF PAYMENT");
+    private TextField nip = new TextField("BUYER NIP");
+    private TextField buyerName = new TextField("BUYER NAME");
+    private TextField regon = new TextField("BUYER REGON");
+    private TextField buyerWorkingAddress = new TextField("BUYER ADDRESS");
+    private Button findTaxpayer = new Button("SEARCH");
 
     public FindBuyerLayout() {
         nip.setRequired(true);

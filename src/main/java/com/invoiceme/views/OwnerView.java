@@ -1,6 +1,5 @@
 package com.invoiceme.views;
 
-import com.invoiceme.config.InvoiceMeAddress;
 import com.invoiceme.domain.OwnerDto;
 import com.invoiceme.layout.MainLayout;
 import com.invoiceme.service.OwnerService;
@@ -19,15 +18,14 @@ import static com.invoiceme.config.InvoiceMeAddress.APP_URL;
 
 @Route(value = "mycompany", layout = MainLayout.class)
 public class OwnerView extends VerticalLayout {
-    private InvoiceMeAddress invoiceMeAddress = new InvoiceMeAddress();
     private OwnerService ownerService = new OwnerService();
-    private TextField name = new TextField("Name");
-    private TextField nip = new TextField("Nip");
-    private TextField regon = new TextField("Regon");
-    private TextField workingAddress = new TextField("Address");
-    private TextField bankAccount = new TextField("Bank Account");
-    private TextField email = new TextField("Email");
-    private Button saveBuyerData = new Button("Save");
+    private TextField name = new TextField("NAME");
+    private TextField nip = new TextField("NIP");
+    private TextField regon = new TextField("REGON");
+    private TextField workingAddress = new TextField("ADDRESS");
+    private TextField bankAccount = new TextField("BANK ACCOUNT");
+    private TextField email = new TextField("EMAIL");
+    private Button saveBuyerData = new Button("SAVE");
     private Button addNewCompanyData;
     private FormLayout fLCompanyData;
     private Label myName;
@@ -52,7 +50,7 @@ public class OwnerView extends VerticalLayout {
     }
 
     private void getAddNewCompanyData() {
-        addNewCompanyData = new Button("Add new company data");
+        addNewCompanyData = new Button("ADD NEW COMPANY DATA");
         addNewCompanyData.addClickListener(clickEvent -> {
             if (!fLCompanyData.isVisible()) {
                 fLCompanyData.setVisible(true);
@@ -80,7 +78,7 @@ public class OwnerView extends VerticalLayout {
         myNip = new Label("NIP: " + currentOwnerDto.getNip().toString());
         myRegon = new Label("REGON: " + currentOwnerDto.getRegon().toString());
         myAddress = new Label(currentOwnerDto.getWorkingAddress());
-        myBankAccount = new Label("Bank Account: " + currentOwnerDto.getBankAccount());
+        myBankAccount = new Label("BANK ACCOUNT: " + currentOwnerDto.getBankAccount());
         myEmail = new Label(currentOwnerDto.getEmail());
     }
 
