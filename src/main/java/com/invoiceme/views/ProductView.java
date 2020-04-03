@@ -38,7 +38,7 @@ public class ProductView extends VerticalLayout {
         getProductsGrid();
         getCreateProductFormLayout();
 
-        refreshGridItems(grid);
+        refreshGridItems();
         setSizeFull();
         add(fLCreateProduct, grid);
     }
@@ -63,16 +63,19 @@ public class ProductView extends VerticalLayout {
 
     private void getProductsGrid() {
         grid.setSizeFull();
+
         grid.addColumn(ProductDto::getId)
                 .setHeader("ID")
+                .setSortable(true)
                 .setFlexGrow(0);
         Grid.Column<ProductDto> descriptionColumn = grid
                 .addColumn(ProductDto::getDescription)
+                .setSortable(true)
                 .setHeader("DESCRIPTION");
         Grid.Column<ProductDto> vatColumn = grid
                 .addColumn(ProductDto::getVat)
+                .setSortable(true)
                 .setHeader("TAX");
-
         addEditColumn(grid, descriptionColumn, vatColumn);
         addDeleteColumn(grid);
     }
@@ -84,7 +87,7 @@ public class ProductView extends VerticalLayout {
                 productService.createProduct(description.getValue(), vat.getValue());
                 description.clear();
 
-                refreshGridItems(grid);
+                refreshGridItems();
             } else {
                 dialogWindow.setDialog("<p><b>Please complete required fields.</b></p>");
             }
@@ -96,7 +99,7 @@ public class ProductView extends VerticalLayout {
     private void addDeleteColumn(Grid<ProductDto> grid) {
         grid.addComponentColumn(productDto -> new Button("DELETE", click -> {
             productService.deleteProduct(productDto.getId());
-            refreshGridItems(grid);
+            refreshGridItems();
         }));
     }
 
@@ -155,7 +158,7 @@ public class ProductView extends VerticalLayout {
         });
     }
 
-    private void refreshGridItems(Grid<ProductDto> grid) {
+    private void refreshGridItems() {
         grid.setItems(productService.getProducts());
     }
 }

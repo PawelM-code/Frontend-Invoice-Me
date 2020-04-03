@@ -46,6 +46,7 @@ public class CurrenciesView extends VerticalLayout {
         getSaveRateButton();
         getFindRateLayout();
 
+        setSizeFull();
         add(findRateLayout, currencyGrid);
     }
 
